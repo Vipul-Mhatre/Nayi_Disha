@@ -10,7 +10,6 @@ function UserDonation() {
   const [isLoading, setIsLoading] = useState(true);
   const [campaigns, setCampaigns] = useState([]);
   const [donations , setDonations] = useState([]);
-  
 
   const fetchCampaigns = () => {
     axios.post(SERVER_URL +'/getManyDonatedCampaigns', state.loggedUser.donated_campaigns) //returns list of campaigns from id's in yourCampaigns
@@ -44,7 +43,6 @@ function UserDonation() {
             )}
 
             {!isLoading && campaigns.length > 0 && campaigns.map((campaign , index) => {
-                // const remainingDays = daysLeft(campaign.deadline);
                 return (
                     <div key={campaign.id} className='w-full md:w-[600px]'>
                       <div className="mx-auto rounded-[15px] bg-[#1c1c24] text-[#1dc071] flex flex-col md:flex-row">

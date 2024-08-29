@@ -19,8 +19,7 @@ const Search = () => {
       .catch((err)=>{
           console.log(err)
           setIsLoading(false);
-    })
-      
+    }) 
   }
 
   useEffect(() => {

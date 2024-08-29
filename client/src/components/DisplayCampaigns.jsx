@@ -12,7 +12,6 @@ const DisplayCampaigns = ({ title, notFound, isLoading, setHasDeleted, campaigns
     navigate(`/campaign-details/${campaign.title}`, { state: campaign })
   }
 
-  // For the URL
   return (
     <div>
       <h1 className="font-epilogue font-semibold font-['Ubuntu'] text-xl md:text-3xl text-white text-center md:text-left">{title} ({campaigns.length})</h1>

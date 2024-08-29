@@ -9,15 +9,14 @@ import Login from './Login'
 import { UserContext } from "../App";
 import { SERVER_URL } from '../constants';
 
-
 export default function App(props) {
 
   const {state , dispatch} = useContext(UserContext);
-
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [success , setSuccess] = useState(false)
   const [error , setError] = useState(false)
   const [formType , setFormType] = useState("")
+
   const [ loginForm , setLoginForm ] = useState({
     email: "",
     pwd: ""
@@ -34,8 +33,6 @@ export default function App(props) {
     setSuccess(false)
   },[])
 
-
-   //validation
   function validateEmail(email) {
     const regex = /^[\w.-]+@[a-zA-Z_-]+?\.[a-zA-Z]{2,}$/;
     return regex.test(email);
@@ -49,10 +46,7 @@ export default function App(props) {
     setRegisterForm({...registerForm , [fieldname]: e.target.value})
   }
   
-
-  //REGISTRATION
   const registerSubmitHandler = () => {
-    //validation
     if(!validateEmail(registerForm.email)){
       toast.error("Invalid Email");
       setSuccess(false)
@@ -63,7 +57,6 @@ export default function App(props) {
       setSuccess(false)
     }
 
-    //post request
     axios.post(SERVER_URL + '/register' , registerForm)
       .then((res) => {
         if(res.status === 201){
@@ -84,9 +77,7 @@ export default function App(props) {
       setFormType(props.formType);
   }
 
-  // LOGIN
   const loginSubmitHandler = () => {
-    //validation
     if(!validateEmail(loginForm.email)){
       toast.warning("Invalid Email");
       setSuccess(false)
@@ -97,7 +88,6 @@ export default function App(props) {
       setSuccess(false)
     }
 
-    //post request
     axios.post(SERVER_URL + '/login' , loginForm , {withCredentials:true , credentials: "include"})
       .then((res) => {
         if(res.status === 200){

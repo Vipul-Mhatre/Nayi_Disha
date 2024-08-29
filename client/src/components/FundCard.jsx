@@ -12,16 +12,6 @@ const FundCard = ({ campaign, setHasDeleted, editable=false, handleClick }) => {
   const {state,dispatch} = useContext(UserContext);
   const remainingDays = daysLeft(campaign.deadline);
   const navigate = useNavigate();
-  // const [editable, setEditable] = useState(false)
-
-  // useEffect(()=>{
-  //   if(){
-  //     setEditable(true)
-  //   }
-  //   else{
-  //     setEditable(false)
-  //   }
-  // },[state.loggedUser, state.loggedIn])
 
   const handleDelete = () =>{
     axios.post(SERVER_URL + '/deleteCampaign', {_id: campaign._id} , {withCredentials: true})

@@ -12,7 +12,6 @@ const CreateCampaign = () => {
   const navigate = useNavigate();
   const {state , dispatch} = useContext(UserContext)
   const [isLoading, setIsLoading] = useState(false);
-  // const { createCampaign } = useStateContext();
   const [form, setForm] = useState({
     name: '',
     title: '',

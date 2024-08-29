@@ -20,7 +20,6 @@ const Profile = () => {
       .catch((err)=>console.log(err))
   }
   
-
   useEffect(() => {
     setIsLoading(true);
     console.log("state:",state.loggedUser)

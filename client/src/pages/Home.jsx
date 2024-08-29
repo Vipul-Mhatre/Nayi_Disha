@@ -12,8 +12,6 @@ const Home = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    //fetch campaigns
-    // Run after 700 Millisecinds the new Campaign
     setTimeout(() => {
       axios.get(SERVER_URL + '/allCampaigns')
       .then((res) => {
@@ -24,8 +22,6 @@ const Home = () => {
         console.log(e);
         setIsLoading(false);
       })
-
-      // axios.
     }, 700);
 
   },[hasDeleted]);

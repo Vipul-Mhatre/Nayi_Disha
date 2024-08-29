@@ -13,16 +13,13 @@ const CampaignDetails = () => {
   const { state } = useLocation();
   const { _ , dispatch} = useContext(UserContext)
   const navigate = useNavigate();
-
   const [isLoading, setIsLoading] = useState(false);
   const [amount, setAmount] = useState('');
   const [donators, setDonators] = useState([]);
   const [checkCampaign , setCheckCampaign] = useState(false)
-
   const remainingDays = daysLeft(state.deadline);
 
   useEffect(() => {
-    // sets donators
     setTimeout(()=>{
       axios.get(`${SERVER_URL}/getCampaign/${state._id}`)
       .then((res)=>{
@@ -108,14 +105,12 @@ const CampaignDetails = () => {
               </div>
               <div>
                 <h4 className="font-epilogue font-semibold text-[14px] text-white break-all">{state.name}</h4>
-                {/* <p className="mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]">{state.donators.length} donations</p> */}
               </div>    
             </div>
           </div>
 
           <div>
             <h4 className="font-epilogue font-semibold font-['Ubuntu'] text-[22px] text-white text-center lg:text-left uppercase">DESCRIPTION</h4>
-
             <div className="mt-[6px]">
               <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify">{state.description}</p>
             </div>

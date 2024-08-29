@@ -19,7 +19,6 @@ export const UserContext = createContext();
 
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  //dispatch is used to change the state to check whether user is logged in or not
   return (
     <UserContext.Provider value={{ state, dispatch }}>
       <div className="relative min-w-full sm:-8 p-4 bg-[#13131a] min-h-screen flex flex-row">

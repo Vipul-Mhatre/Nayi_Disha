@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Logout from "./Logout";
 import { UserContext } from "../App";
 import { SERVER_URL } from '../constants';
-// For name and Email
+
 export default function AvatarMenu() {
     const {state , dispatch} = useContext(UserContext)
     const navigate = useNavigate()

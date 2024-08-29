@@ -94,14 +94,14 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/create-campaign', authMiddleware(Organization), async (req, res) => {
-    const { name, description, donors, totalAmtCollected, address } = req.body;
+    const { name, description, donors, photo, totalAmtCollected, address } = req.body;
     const org = req.user;
     if (!name || !description || !address) {
         return res.status(422).json({ error: "Please add all required fields" });
     }
     const amt = totalAmtCollected ? totalAmtCollected : 0;
     try {
-        const campaign = new Campaign({ name, description, donors, address, organization:org._id, totalAmtCollected:amt });
+        const campaign = new Campaign({ name, description, donors, address, photo, organization:org._id, totalAmtCollected:amt });
         await campaign.save();
         return res.status(200).json({message:"Campaign started successfully"})
     } catch (e) {
@@ -236,7 +236,7 @@ router.get('/ongoing-campaigns', async (req, res) => {
 });
 
 router.patch('/donate', authMiddleware(User), async (req, res) => {
-    const { amount, campaignId, hash } = req.body;
+    const { amount, BcampaignId, campaignId, hash } = req.body;
     const userId = req.user._id;
 
     try {
@@ -250,7 +250,7 @@ router.patch('/donate', authMiddleware(User), async (req, res) => {
             return res.status(404).json({ error: "Campaign not found" });
         }
 
-        const donation = { amount, campaignId, hash };
+        const donation = { amount, BcampaignId, campaignId, hash };
         user.donations.push(donation);
         campaign.donors.push(userId);
 
@@ -300,6 +300,19 @@ router.get('/organization/campaigns', authMiddleware(Organization), async (req, 
         return res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
+router.get('/organization/donors', authMiddleware(Organization), async (req, res) => {
+    try {
+        const users = await User.find();
+        const donors = users.filter(user => user.donations.length > 0);
+        return res.status(200).json({ donors });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+
 
 router.get('/get-all-users', authMiddleware(Organization),async (req, res) => {
     try {

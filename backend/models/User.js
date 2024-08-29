@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const donationSchema = new Schema({
     amount: { type: Number, required: true },
+    BcampaignId: { type: String, required: true },
     campaignId: { type: String, required: true },
     hash: { type: String, required: true }
 });

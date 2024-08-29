@@ -22,10 +22,8 @@ const Donate = () => {
 
                 console.log('Transaction:', transaction);
 
-                // Wait for the transaction to be confirmed
                 await transaction.wait();
 
-                // Call the backend API to save the transaction details
                 await saveDonationDetails(transaction.hash, amount, charityId);
 
                 alert('Donation made successfully');

@@ -74,7 +74,7 @@ const Login = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
-                    ) : role === "charity" ? (
+                    ) : role === "organization" ? (
                             <div>
                                 <label className="font-medium">
                                     Name

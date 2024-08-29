@@ -6,6 +6,7 @@ const orgSchema = new Schema({
     name: { type: String, required: true },
     description: { type: String, required: true },
     address: { type: String, required: true },
+    phone: { type: Number, required: true },
     campaigns: [{ type: Schema.Types.ObjectId, ref: "Campaign" }],
     password: { type: String, required: true }
 });

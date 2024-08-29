@@ -47,9 +47,9 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-    const { name, type, password, description, address, email } = req.body;
+    const { name, type, password, description, address, email, phone } = req.body;
 
-    if (!name || !password || !address || !email || (type === "charity" && !email) || (type === "organization" && !description)) {
+    if (!name || !password || !address || (type === "charity" && !email) || (type === "organization" && (!description || !phone))) {
         return res.status(422).json({ error: "Please add all required fields" });
     }
 
@@ -74,7 +74,7 @@ router.post('/register', async (req, res) => {
                 return res.status(422).json({ error: "Organization already exists with that name" });
             }
             const hashedPassword = await bcrypt.hash(password, 12);
-            const org = new Organization({ name, description, address, password: hashedPassword });
+            const org = new Organization({ name, description, address, password: hashedPassword, phone });
             await org.save();
             const token = await org.generateToken();
             return res.json({

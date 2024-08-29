@@ -9,22 +9,24 @@ const Register = () => {
     const navigate = useNavigate();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [id, setId] = useState("");
-    const [description, setDescription] = useState("");
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
     const [password, setPassword] = useState("");
+    const [description,setdescription] = useState("")
 
+    console.log(role);
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = {
-            type:role,
+            type: role,
             name,
             email,
-            description,
+            phone,
             address,
-            password
+            password,
+            description
         };
+        console.log(formData)
         try {
             const res = await fetch(`${process.env.REACT_APP_BACKEND_API}/register`, {
                 method: "POST",
@@ -34,6 +36,7 @@ const Register = () => {
                 body: JSON.stringify(formData)
             });
             const data = await res.json();
+            console.log("data", data);
             if (res.status === 200) {
                 storeTokenInLS(data.token);
                 setIsLoggedIn(true);
@@ -59,10 +62,7 @@ const Register = () => {
                     </div>
                     <hr className="my-2" />
                 </div>
-                <form
-                    onSubmit={handleSubmit}
-                    className="space-y-5"
-                >
+                <form onSubmit={handleSubmit} className="space-y-5">
                     <div>
                         <label className="font-medium">
                             Select Your Role
@@ -71,55 +71,55 @@ const Register = () => {
                     </div>
                     
                     {role === 'user' ? (
-                                <div>
-                                    <label className="font-medium">
-                                        Email
-                                    </label>
-                                    <input
-                                        type="email"
-                                        required
-                                        className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                    />
-                                </div>
-                        ) : role === "Organization" ? (
-                                <div>
-                                    <label className="font-medium">
-                                        Name
-                                    </label>
-                                    <input
-                                        type="text"
-                                        required
-                                        className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                    />
-                                </div>
-                        ) :null
-                    }
-                    <div>
-                        <label className="font-medium">
-                            Phone
-                        </label>
-                        <input
-                            type="number"
-                            size={10}
-                            maxLength={10}
-                            required
-                            className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <label className="font-medium">
-                            Address
-                        </label>
+                        <div>
+                            <label className="font-medium">Email</label>
+                            <input
+                                type="email"
+                                required
+                                className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
+                    ) : role === "organization" ? (
+                        <>
+                            <div>
+                                <label className="font-medium">Name</label>
+                                <input
+                                    type="text"
+                                    required
+                                    className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                />
+                            </div>
+                            <div>
+                                <label className="font-medium">Phone</label>
+                                <input
+                                    type="number"
+                                    required
+                                    className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                />
+                            </div>
+                            <div>
+                        <label className="font-medium">Description</label>
                         <input
                             type="text"
-                            size={10}
-                            maxLength={10}
+                            required
+                            className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                            value={description}
+                            onChange={(e) => setdescription(e.target.value)}
+                        />
+                    </div>
+                        </>
+                    ) : null}
+                   
+                    <div>
+                        <label className="font-medium">Address</label>
+                        <input
+                            type="text"
                             required
                             className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
                             value={address}
@@ -127,9 +127,7 @@ const Register = () => {
                         />
                     </div>
                     <div>
-                        <label className="font-medium">
-                            Password
-                        </label>
+                        <label className="font-medium">Password</label>
                         <input
                             type="password"
                             required
@@ -145,7 +143,9 @@ const Register = () => {
                         Register
                     </button>
                 </form>
-                <p className="text-center">Already have an account? <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">Log in</Link></p>
+                <p className="text-center">
+                    Already have an account? <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">Log in</Link>
+                </p>
             </div>
         </main>
     );

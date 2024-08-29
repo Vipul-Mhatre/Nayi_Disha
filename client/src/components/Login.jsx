@@ -29,7 +29,7 @@ function Login({handleChange , onClose, setFormType, error}) {
         variant="bordered"
         isInvalid={error ? true : false}
         color={error ? 'danger' : 'success'}
-        onChange={(e) => {handleChange('pwd',e)}}
+        onChange={(e) => {handleChange('password',e)}}
     />
     <div className="flex py-2 px-1 justify-between">
         <Checkbox

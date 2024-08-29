@@ -8,16 +8,16 @@ const Organization = require('../models/Organization');
 const secret = process.env.SECRET_KEY;
 
 router.post('/login', async (req, res) => {
-    const { name, password } = req.body;
+    const { email, password } = req.body;
 
-    if (!name || !password) {
-        return res.status(422).json({ error: "Please provide a valid name and password" });
+    if (!email || !password) {
+        return res.status(422).json({ error: "Please provide a valid email and password" });
     }
 
     try {
-        const user = await User.findOne({ name });
+        const user = await User.findOne({ email });
         if (!user) {
-            return res.status(422).json({ error: "Invalid name or password" });
+            return res.status(422).json({ error: "Invalid email or password" });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);

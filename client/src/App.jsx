@@ -1,35 +1,59 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { createContext, useReducer } from "react";
+import { Route, Routes } from "react-router-dom";
+import { Sidebar, Navbar } from "./components";
+import {
+  Home,
+  Profile,
+  CreateCampaign,
+  CampaignDetails,
+  UserDonation,
+  Search,
+  Update,
+} from "./pages";
 
-function App() {
-  const [count, setCount] = useState(0)
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ScrollToTop from "./ScrollToTop";
 
+export const UserContext = createContext();
+
+const App = () => {
+  
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <UserContext.Provider value={{ state, dispatch }}>
+      <div className="relative min-w-full sm:-8 p-4 bg-[#13131a] min-h-screen flex flex-row">
+        <div className="sm:flex hidden mr-10 relative">
+          <Sidebar />
+        </div>
 
-export default App
+        <div className="flex-1 max-sm:w-full max-w-[1540px] min-w-screen mx-auto sm:pr-5">
+          <Navbar />
+          <ScrollToTop/>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/create-campaign" element={<CreateCampaign />} />
+              <Route path="/campaign-details/:id"element={<CampaignDetails />} />
+              <Route path="/payments" element={<UserDonation />} />
+              <Route path="/search/:title" element={<Search />} />
+              <Route path="/update/:id" element={<Update />} />
+            </Routes>
+        </div>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={1000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
+      </div>
+    </UserContext.Provider>
+  );
+};
+
+export default App;

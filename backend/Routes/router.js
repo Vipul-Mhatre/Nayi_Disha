@@ -81,7 +81,9 @@ router.post('/register', async (req, res) => {
                 message: "Registered Successfully",
                 token,
                 orgId: org._id.toString(),
-            });
+            }).then(()=>{
+                sendSMS
+            })
         } else {
             return res.status(422).json({ error: "Please enter a valid user type" });
         }

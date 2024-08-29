@@ -8,14 +8,22 @@ const Organization = require('../models/Organization');
 const secret = process.env.SECRET_KEY;
 
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    const { name, email, type, password } = req.body;
 
-    if (!email || !password) {
+    if (!password) {
         return res.status(422).json({ error: "Please provide a valid email and password" });
     }
 
+    let user = "";
+
     try {
-        const user = await User.findOne({ email });
+        if (type === "user") {
+            if (!email) { return res.status(422).json({ error: "Please provide a valid email" }); }
+            user = await User.findOne({ email });
+        } else {
+            if (!name) { return res.status(422).json({ error: "Please provide a valid name" }); }
+            user = await Organization.findOne({ name });
+        }
         if (!user) {
             return res.status(422).json({ error: "Invalid email or password" });
         }

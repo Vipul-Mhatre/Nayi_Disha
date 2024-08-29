@@ -9,6 +9,9 @@ import ProtectedRoute from './user-routes/PrivateRoute';
 import Register from './Pages/Register';
 import Dashboard from './Pages/Dashboard';
 import Widget from './Pages/Widget';
+import RegisterCharity from './Pages/RegisterCharity';
+import AllCharities from './Pages/AllCharities';
+import Donate from './Pages/Donate';
 
 import Ongoing from './Pages/Ongoing';
 
@@ -18,6 +21,9 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/register-charity" element={<RegisterCharity />} />
+        <Route path="/get-charities" element={<AllCharities />} />
+        <Route path="/donate" element={<Donate />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>} />

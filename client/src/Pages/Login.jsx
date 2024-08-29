@@ -6,18 +6,20 @@ import Dropdown from '../Components/Dropdown';
 
 const Login = () => {
     const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
     const [password, setPassword] = useState("");
-    const { storeTokenInLS, setIsLoggedIn, roles, role } = useAuth();
+    const { setIsLoggedIn, roles, role } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
+        if(!role){return toast.error("Please give a proper user role")}
         e.preventDefault();
-        const formData = { email, password };
+        const formData = { type:role,name,email, password };
         if (!role) {
             toast.error("Please select a proper user type")
         }
         try {
-            const res = await fetch(`${process.env.REACT_APP_BACKEND_API}/login/${role}`, {
+            const res = await fetch(`${process.env.REACT_APP_BACKEND_API}/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -59,18 +61,44 @@ const Login = () => {
                         </label>
                         <Dropdown head="Select Your Role" data={roles} />
                     </div>
-                    <div>
-                        <label className="font-medium">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            required
-                            className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
+                    {role === "charity" ? (
+                        <div>
+                            <label className="font-medium">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                required
+                                className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
+                    ) : role === "charity" ? (
+                            <div>
+                                <label className="font-medium">
+                                    Name
+                                </label>
+                                <input
+                                    type="name"
+                                    required
+                                    className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                />
+                            </div>
+                        ) : <div>
+                            <label className="font-medium">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                required
+                                className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>}
                     <div>
                         <label className="font-medium">
                             Password

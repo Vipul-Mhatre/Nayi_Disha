@@ -12,16 +12,10 @@ export const AuthProvider = ({ children }) => {
 
     const roles = [
         {
-            label :"Nyay Sahayak"
+            label :"Organization"
         },
         {
-            label:"Advocate"
-        },
-        {
-            label: "Police"
-        },
-        {
-            label: "Applicant"
+            label:"User"
         }
     ]
 

@@ -7,30 +7,26 @@ import Dropdown from '../Components/Dropdown';
 const Register = () => {
     const { storeTokenInLS, setIsLoggedIn, roles, role } = useAuth();
     const navigate = useNavigate();
-    const [fullname, setFullname] = useState("");
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [id, setId] = useState("");
-    const [department, setDepartment] = useState("");
+    const [description, setDescription] = useState("");
     const [phone, setPhone] = useState("");
+    const [address, setAddress] = useState("");
     const [password, setPassword] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = {
-            fullname,
+            type:role,
+            name,
             email,
-            phone,
-            password,
+            description,
+            address,
+            password
         };
-        if (role !== "applicant") {
-            formData.id = id;
-            formData.department = department;
-        }
-        const regType = role === "applicant" ? "registerApplicant" :
-            role === "police" ? "registerPolice" : 
-                role === "advocate" ? "registerAdvocate" : "registerJudge"
         try {
-            const res = await fetch(`${process.env.REACT_APP_BACKEND_API}/${regType}`, {
+            const res = await fetch(`${process.env.REACT_APP_BACKEND_API}/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -73,59 +69,34 @@ const Register = () => {
                         </label>
                         <Dropdown head="Select Your Role" data={roles} />
                     </div>
-                    <div>
-                        <label className="font-medium">
-                            Full Name
-                        </label>
-                        <input
-                            type="text"
-                            required
-                            className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-                            value={fullname}
-                            onChange={(e) => setFullname(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <label className="font-medium">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            required
-                            className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-                    {
-                        role !== 'applicant' ? (
-                            <>
+                    
+                    {role !== 'user' ? (
                                 <div>
                                     <label className="font-medium">
-                                        Id
+                                        Email
+                                    </label>
+                                    <input
+                                        type="email"
+                                        required
+                                        className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                </div>
+                        ) : role === "Organization" ? (
+                                <div>
+                                    <label className="font-medium">
+                                        Name
                                     </label>
                                     <input
                                         type="text"
                                         required
                                         className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-                                        value={id}
-                                        onChange={(e) => setId(e.target.value)}
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>
-                                <div>
-                                    <label className="font-medium">
-                                        Department
-                                    </label>
-                                    <input
-                                        type="text"
-                                        required
-                                        className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-                                        value={department}
-                                        onChange={(e) => setDepartment(e.target.value)}
-                                    />
-                                </div>
-                            </>
-                        ) : null
+                        ) :null
                     }
                     <div>
                         <label className="font-medium">
@@ -139,6 +110,20 @@ const Register = () => {
                             className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label className="font-medium">
+                            Address
+                        </label>
+                        <input
+                            type="text"
+                            size={10}
+                            maxLength={10}
+                            required
+                            className="w-full mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
                         />
                     </div>
                     <div>

@@ -1,15 +1,19 @@
-export const initialState = {
-    type: null,
-    payload: {loggedIn: false, loggedUser: null},
-};
-
-export const reducer = (state , action) => {
-    if(action.type === "USER")
+export const reducer = (state, action) => {
+    switch (action.type) {
+      case "charity":
+      case "organization":
         return {
-            ...state,
-            loggedIn: action.payload.loggedIn,
-            loggedUser: action.payload.loggedUser
+          ...state,
+          loggedIn: action.payload.loggedIn,
+          loggedUser: action.payload.loggedUser,
         };
-    
-    return state;
-}
+      default:
+        return state;
+    }
+  };
+  
+  export const initialState = {
+    type: null,
+    loggedIn: false,
+    loggedUser: null,
+  };

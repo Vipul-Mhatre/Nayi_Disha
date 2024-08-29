@@ -1,37 +1,32 @@
 import React, { useContext, useEffect, useState } from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
-import {MailIcon} from '../assets';
-import {LockIcon} from '../assets';
-import axios from "axios";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import { toast } from 'react-toastify';
-import Register from './Register'
-import Login from './Login'
+import Register from './Register';
+import Login from './Login';
 import { UserContext } from "../App";
 import { SERVER_URL } from '../constants';
 
 export default function App(props) {
+  const { state, dispatch } = useContext(UserContext);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
+  const [formType, setFormType] = useState("");
 
-  const {state , dispatch} = useContext(UserContext);
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
-  const [success , setSuccess] = useState(false)
-  const [error , setError] = useState(false)
-  const [formType , setFormType] = useState("")
+  const [loginForm, setLoginForm] = useState({ email: "", password: "" });
+  const [registerForm, setRegisterForm] = useState({ name: "", email: "", pwd: "", cpwd: "" });
 
-  const [ loginForm , setLoginForm ] = useState({
-    email: "",
-    pwd: ""
-  })
-  const [ registerForm , setRegisterForm ] = useState({
-    name:"",
-    email: "",
-    pwd: "",
-    cpwd:""
-  })
-
-  useEffect(() =>{
+  useEffect(() => {
     setFormType(props.formType);
-    setSuccess(false)
-  },[])
+    resetForms();
+  }, [props.formType]);
+
+  const resetForms = () => {
+    setLoginForm({ email: "", password: "" });
+    setRegisterForm({ name: "", email: "", pwd: "", cpwd: "" });
+    setSuccess(false);
+    setError(false);
+  };
 
   function validateEmail(email) {
     const regex = /^[\w.-]+@[a-zA-Z_-]+?\.[a-zA-Z]{2,}$/;
@@ -39,116 +34,115 @@ export default function App(props) {
   }
 
   const handleLoginChange = (fieldname, e) => {
-    setLoginForm({...loginForm , [fieldname]: e.target.value})
-  }
+    setLoginForm({ ...loginForm, [fieldname]: e.target.value });
+  };
 
   const handleRegisterChange = (fieldname, e) => {
-    setRegisterForm({...registerForm , [fieldname]: e.target.value})
-  }
-  
+    setRegisterForm({ ...registerForm, [fieldname]: e.target.value });
+  };
+
   const registerSubmitHandler = () => {
-    if(!validateEmail(registerForm.email)){
+    if (!validateEmail(registerForm.email)) {
       toast.error("Invalid Email");
-      setSuccess(false)
-      setError(true)
-    }
-    if(!registerForm.email || !registerForm.pwd || !registerForm.name || !registerForm.cpwd){
-      toast.error("Please enter all the fields");
-      setSuccess(false)
+      setError(true);
+      return;
     }
 
-    axios.post(SERVER_URL + '/register' , registerForm)
+    if (!registerForm.email || !registerForm.pwd || !registerForm.name || !registerForm.cpwd) {
+      toast.error("Please enter all the fields");
+      setError(true);
+      return;
+    }
+
+    axios.post(SERVER_URL + '/register', registerForm)
       .then((res) => {
-        if(res.status === 201){
-          toast.success(res.data.message)
-          setSuccess(true)
-          setError(false)
+        if (res.status === 201) {
+          toast.success(res.data.message);
+          setSuccess(true);
+          setError(false);
         }
       })
       .catch((err) => {
         console.log(err);
-        if( err.response.status === 401 ){
+        if (err.response && err.response.status === 401) {
           toast.error(err.response.data.message);
-          setSuccess(false)
-          setError(true)
+          setError(true);
         }
-      })
-      props.handleClick();
-      setFormType(props.formType);
-  }
+      });
+
+    props.handleClick();
+    setFormType(props.formType);
+  };
 
   const loginSubmitHandler = () => {
-    if(!validateEmail(loginForm.email)){
-      toast.warning("Invalid Email");
-      setSuccess(false)
-      setError(true)
+    // Validate input fields based on the selected role
+    if (loginForm.type === "organization") {
+      if (!loginForm.name || !loginForm.password) {
+        toast.warning("Please enter the organization name and password.");
+        setError(true);
+        return;
+      }
+    } else if (loginForm.type === "charity") {
+      if (!loginForm.email || !loginForm.password) {
+        toast.warning("Please enter the charity email and password.");
+        setError(true);
+        return;
+      }
+    } else {
+      toast.warning("Please select a role (Organization or Charity).");
+      setError(true);
+      return;
     }
-    if(!loginForm.email || !loginForm.pwd){
-      toast.warning("Please Enter all the fields");
-      setSuccess(false)
-    }
-
-    axios.post(SERVER_URL + '/login' , loginForm , {withCredentials:true , credentials: "include"})
+  
+    axios.post("http://localhost:5000/login", loginForm)
       .then((res) => {
-        if(res.status === 200){
-          dispatch({type: "USER" , payload: {loggedIn: true, loggedUser: res.data.loggedUser}})
-          console.log("state:",state.loggedUser)
-          toast.success(res.data.message)
-          setSuccess(true)
-          setError(false)
+        if (res.status === 200) {
+          const actionType = loginForm.type === "charity" ? "charity" : "organization";
+          dispatch({ type: actionType, payload: { loggedIn: true, loggedUser: res.data.loggedUser } });
+          toast.success(res.data.message);
+          setError(false);
         }
       })
       .catch((err) => {
         console.log(err);
-        if( err.response.status === 401 || err.response.status === 500 ){
+        if (err.response && (err.response.status === 401 || err.response.status === 500)) {
           toast.error(err.response.data.message);
-          setSuccess(false)
-          setError(true)
+          setError(true);
         }
-      })
-      props.handleClick()
-      setFormType(props.formType);
-  }
+      });
+  
+    setFormType("Login");
+  };
 
   return (
     <>
-      <Button 
-        onPress={onOpen} 
-        className="font-epilogue font-semibold text-[16px] leading-[26px] text-white min-h-[48px] px-4 rounded-[10px] bg-[#1dc071]"
-        >
+      <Button onPress={onOpen} className="font-epilogue font-semibold text-[16px] leading-[26px] text-white min-h-[48px] px-4 rounded-[10px] bg-[#1dc071]">
         {props.formType}
       </Button>
-      <Modal 
-        isOpen={isOpen} 
-        onOpenChange={onOpenChange}
-        placement="center"
-        backdrop="blur"
-        className="pt-2"
-      >
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="center" backdrop="blur" className="pt-2">
         <ModalContent>
           {(onClose) => (
-          <>
-            <ModalHeader className="flex flex-col gap-1 text-4xl text-semibold">{formType}</ModalHeader>
+            <>
+              <ModalHeader className="flex flex-col gap-1 text-4xl text-semibold">{formType}</ModalHeader>
               <ModalBody>
-                {formType === "Login" ? 
-                  <Login handleChange={handleLoginChange} onClose={onClose} setFormType={setFormType} error={error}/> : 
+                {formType === "Login" ? (
+                  <Login handleChange={handleLoginChange} onClose={onClose} setFormType={setFormType} error={error} />
+                ) : (
                   <Register handleChange={handleRegisterChange} onClose={onClose} setFormType={setFormType} error={error} />
-                }
+                )}
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="flat" onPress={onClose} onClick={()=>{setFormType(props.formType);}}>
+                <Button color="danger" variant="flat" onPress={onClose} onClick={() => { setFormType(props.formType); resetForms(); }}>
                   Close
                 </Button>
-                <Button 
+                <Button
                   onClick={() => {
-                    if(formType === "Login")
-                      loginSubmitHandler()
-                    else if(formType === "Register")
-                      registerSubmitHandler()
-                  }} 
-                  onPress={success ? onClose : null} 
+                    if (formType === "Login") loginSubmitHandler();
+                    else if (formType === "Register") registerSubmitHandler();
+                  }}
+                  onPress={success ? onClose : null}
                   className="bg-[#1dc071]"
-                  >
+                >
                   Submit
                 </Button>
               </ModalFooter>

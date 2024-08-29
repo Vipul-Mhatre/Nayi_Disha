@@ -7,6 +7,8 @@ import Home from './Pages/Home'
 import Login from './Pages/Login';
 import ProtectedRoute from './user-routes/PrivateRoute';
 import Register from './Pages/Register';
+import Dashboard from './Pages/Dashboard';
+import Widget from './Pages/Widget';
 
 function App() {
   return (
@@ -16,6 +18,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>} />
       </Routes>
       <ToastContainer/>
     </>

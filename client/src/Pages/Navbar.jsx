@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { FaUserCircle } from 'react-icons/fa'
 import { useAuth } from '../store/auth';
 
 const Navbar = () => {
@@ -12,6 +13,11 @@ const Navbar = () => {
         localStorage.removeItem('token');
         navigate('/login');
     };
+    const handleProfileClick = () => {
+       
+        navigate('/dashboard');
+    };
+
 
     const handleMode = () => {
         setTheme(theme === 'light' ? 'dark' : 'light');
@@ -19,15 +25,10 @@ const Navbar = () => {
 
     const navigation = [
         { title: "Home", path: "/" },
-        { title: "All Applications", path: "/" },
-        { title: "Starred Applications", path: "/" },
-        { title: "Completed Applications", path: "/" },
-        { title: "Round1 completed", path: "/" },
-        { title: "Round2 completed", path: "/" },
-        { title: "Round3 completed", path: "/" },
-        { title: "Ongoing", path: "/" },
-        { title: "Lawyers", path: "/" },
-        { title: "Applicants", path: "/" },
+       
+        { title: "Ongoing Campaigns", path: "/" },
+         {title:"Upcoming Campaigns" , path:"/"},
+         {title:"Organizations" , path:"/"}
     ];
 
     return (
@@ -81,9 +82,11 @@ const Navbar = () => {
                         </li>
                         <li className="mt-4">
                             {isLoggedIn ? (
-                                <p onClick={logout} className="block py-3 px-4 font-medium text-center text-red-600 border border-red-600 bg-transparent hover:bg-red-600 hover:text-white active:text-white active:bg-red-700 rounded-lg shadow">
-                                    Log out
-                                </p>
+                                <><FaUserCircle
+                                    onClick={handleProfileClick}
+                                    className="text-3xl text-white cursor-pointer hover:text-indigo-600" /><p onClick={logout} className="block py-3 px-4 font-medium text-center text-red-600 border border-red-600 bg-transparent hover:bg-red-600 hover:text-white active:text-white active:bg-red-700 rounded-lg shadow">
+                                        Log out
+                                    </p></>
                             ) : (
                                 <Link to="/login" className="block py-2 px-4 font-medium text-center text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 rounded-lg shadow">
                                     Log in

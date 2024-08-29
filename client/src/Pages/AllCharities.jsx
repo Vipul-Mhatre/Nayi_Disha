@@ -11,12 +11,13 @@ const AllCharities = () => {
             if (contract) {
                 const charitiesList = await contract.getAllCharities();
                 console.log(charitiesList);
-
-                const parsedCharities = charitiesList.flat().map(charity => ({
+                const flattenedList = charitiesList.flat();
+                const filteredCharities = flattenedList.filter(charity => charity[0] && charity[2]);
+                const parsedCharities = filteredCharities.map(charity => ({
                     name: charity[0] || "",
                     description: charity[1] || "",
                     charityAddress: charity[2] || "",
-                    id: charity[3] ? charity[3].toString() : "", 
+                    id: charity[3] ? charity[3].toString() : "",  
                     isActive: charity[4] || false,
                 }));
 

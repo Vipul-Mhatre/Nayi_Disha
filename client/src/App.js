@@ -14,6 +14,7 @@ import AllCharities from './Pages/AllCharities';
 import Donate from './Pages/Donate';
 
 import Ongoing from './Pages/Ongoing';
+import Donations from './Pages/Donations';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/register-charity" element={<RegisterCharity />} />
         <Route path="/get-charities" element={<AllCharities />} />
         <Route path="/donate" element={<Donate />} />
+        <Route path="/donations" element={<Donations />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>} />

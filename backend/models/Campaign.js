@@ -6,6 +6,7 @@ const campSchema = new Schema({
     description: { type: String, required: true },
     donors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     organization: { type: String, required: true },
+    address:{type: String, required: true},
     totalAmtCollected: { type: String, required: true },
     ended: {type:Boolean, default: false}
 });

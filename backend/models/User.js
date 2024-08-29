@@ -2,11 +2,17 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const Schema = mongoose.Schema;
 
+const donationSchema = new Schema({
+    amount: { type: Number, required: true },
+    campaignId: { type: String, required: true },
+    hash: { type: String, required: true }
+});
+
 const userSchema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
     address: { type: String, required: true },
-    donations: [{ type: String }],
+    donations: [donationSchema],
     password: { type: String, required: true }
 });
 

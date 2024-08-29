@@ -38,7 +38,7 @@ const Home = () => {
 }, []);
 
 return (
-  <div className='ml-44  bg-slate-900 w-full text-center text-white min-h-screen flex flex-wrap items-center justify-center flex-col'>
+  <div className='ml-44 bg-slate-900 w-full text-center text-white min-h-screen flex flex-wrap items-center justify-center flex-col'>
     <h1 className='py-10 text-3xl font-semibold'>All Campaigns</h1>
     <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
       {Array.from({ length: 6 }).map((_, index) => (

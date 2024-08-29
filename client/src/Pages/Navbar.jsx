@@ -25,7 +25,6 @@ const Navbar = () => {
 
     const navigation = [
         { title: "Home", path: "/" },
-       
         { title: "Ongoing Campaigns", path: "/" },
          {title:"Upcoming Campaigns" , path:"/"},
          {title:"Organizations" , path:"/"}
@@ -60,6 +59,9 @@ const Navbar = () => {
                     <ul className="space-y-4">
                         <li className='flex justify-center align-middle items-center text-white gap-1 py-7'><img src='logo192.png' className='w-7' />NayiDisha</li>
                         <hr />
+                        <li><button className="flex items-center py-3 px-5 font-medium text-center text-blue-600 border border-blue-600 bg-transparent hover:bg-blue-600 hover:text-white active:text-white active:bg-blue-700 rounded-lg shadow-lg cursor-pointer transition-colors duration-300 mb-3">
+                            connect wallet
+                    </button></li>
                         {navigation.map((item, idx) => (
                             <li key={idx} onClick={() => setState(false)} className="text-gray-200 hover:bg-slate-600 rounded-lg">
                                 <Link to={item.path} className="block py-2 px-4">

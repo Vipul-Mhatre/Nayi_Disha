@@ -34,7 +34,9 @@ const Register = () => {
                 body: JSON.stringify(formData)
             });
             const data = await res.json();
+            console.log("data" , data)
             if (res.status === 200) {
+                
                 storeTokenInLS(data.token);
                 setIsLoggedIn(true);
                 toast.success("Registration successful");

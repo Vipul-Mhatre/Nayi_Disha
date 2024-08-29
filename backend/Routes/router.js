@@ -94,14 +94,14 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/create-campaign', authMiddleware(Organization), async (req, res) => {
-    const { name, description, donors, totalAmtCollected } = req.body;
+    const { name, description, donors, totalAmtCollected, address } = req.body;
     const org = req.user;
-    if (!name || !description) {
+    if (!name || !description || !address) {
         return res.status(422).json({ error: "Please add all required fields" });
     }
     const amt = totalAmtCollected ? totalAmtCollected : 0;
     try {
-        const campaign = new Campaign({ name, description, donors, organization:org._id, totalAmtCollected:amt });
+        const campaign = new Campaign({ name, description, donors, address, organization:org._id, totalAmtCollected:amt });
         await campaign.save();
         return res.status(200).json({message:"Campaign started successfully"})
     } catch (e) {
@@ -234,6 +234,82 @@ router.get('/ongoing-campaigns', async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error" });  
     }
 });
+
+router.patch('/donate', authMiddleware(User), async (req, res) => {
+    const { amount, campaignId, hash } = req.body;
+    const userId = req.user._id;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        const campaign = await Campaign.findById(campaignId);
+        if (!campaign) {
+            return res.status(404).json({ error: "Campaign not found" });
+        }
+
+        const donation = { amount, campaignId, hash };
+        user.donations.push(donation);
+        campaign.donors.push(userId);
+
+        await user.save();
+        await campaign.save();
+
+        return res.status(200).json({ message: "Donation recorded successfully" });
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+router.get('/donations', authMiddleware(User), async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        return res.status(200).json(user.donations);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+router.get('/organization/campaigns', authMiddleware(Organization), async (req, res) => {
+    try {
+        const organizationId = req.user._id; 
+        const organization = await Organization.findById(organizationId).populate('campaigns').lean();
+        if (!organization || organization.campaigns.length === 0) {
+            return res.status(404).json({ error: "No campaigns found for this organization." });
+        }
+        const detailedCampaigns = organization.campaigns.map(campaign => ({
+            name: campaign.name,
+            description: campaign.description,
+            totalAmtCollected: campaign.totalAmtCollected,
+            ended: campaign.ended,
+            donors: campaign.donors,
+        }));
+
+        return res.status(200).json(detailedCampaigns);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+router.get('/get-all-users', authMiddleware(Organization),async (req, res) => {
+    try {
+        const users = await User.find();
+        return res.status(200).json({ users });
+    } catch (e) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+})
 
 router.get('/user', authMiddleware, (req, res) => {
     try {

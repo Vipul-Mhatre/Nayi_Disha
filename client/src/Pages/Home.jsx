@@ -37,13 +37,48 @@ const Home = () => {
     fetchCampaigns();
 }, []);
 
-  return (
-    <>
-      <div className='ml-36 bg-slate-900 w-full text-center text-white min-h-screen'>
-      
-      </div>
-    </>
-  )
+return (
+  <div className='ml-36 bg-slate-900 w-full text-center text-white min-h-screen flex items-center justify-center'>
+    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
+      {Array.from({ length: 6 }).map((_, index) => (
+        <div key={index} className='max-w-xs bg-white rounded-lg shadow-lg overflow-hidden'>
+          <img
+            className='w-full h-30 object-cover'
+            src='https://via.placeholder.com/400x200.png?text=Environment' //image URL
+            alt='Environmental Conservation'
+          />
+          <div className='p-4'>
+            <h2 className='text-xl font-bold text-slate-900'>
+              Environmental Conservation Initiative
+            </h2>
+            <p className='text-gray-700 mt-2'>
+              Join me in protecting our environment by supporting this conservation project. Funds raised will be used for tree planting, wildlife preservation, and environmental education programs. Together, we can contribute to a sustainable and healthier planet.
+            </p>
+            <div className='mt-4 flex justify-between items-center'>
+              <div>
+                <div className='text-green-600 font-bold'>$2869</div>
+                <div className='text-gray-600'>Raised out of $12000</div>
+              </div>
+              <div className='text-gray-600'>
+                <span className='font-bold'>92</span> Days Left
+              </div>
+            </div>
+            {/* Progress Bar */}
+            <div className='w-full bg-gray-300 rounded-full h-2.5 mt-2'>
+              <div
+                className='bg-green-600 h-2.5 rounded-full'
+                style={{ width: '23.9%' }} 
+              ></div>
+            </div>
+            <div className='mt-4 text-sm text-gray-600'>
+              <span className='font-bold'>by</span> Vipul Mhatre
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 }
 
 export default Home;

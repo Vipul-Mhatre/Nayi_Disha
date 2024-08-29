@@ -1,26 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Dashboard = () => {
-    // Dummy data for campaigns
-    const dummyCampaigns = [
-        { id: 1, name: 'Campaign 1', date: '2024-08-01', donatedAmount: 100 },
-        { id: 2, name: 'Campaign 2', date: '2024-08-05', donatedAmount: 250 },
-        { id: 3, name: 'Campaign 3', date: '2024-08-10', donatedAmount: 150 },
-        { id: 4, name: 'Campaign 4', date: '2024-08-15', donatedAmount: 300 },
-        { id: 5, name: 'Campaign 5', date: '2024-08-20', donatedAmount: 50 },
-        { id: 6, name: 'Campaign 6', date: '2024-08-25', donatedAmount: 200 },
-    ];
-
+    const [campaigns, setCampaigns] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const campaignsPerPage = 2;
+    const token = localStorage.getItem('token'); 
+    useEffect(() => {
+        const fetchCampaigns = async () => {
+            try {
+                console.log('Fetching campaigns...');
+                const response = await axios.get('http://localhost:5000/get-campaigns', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                console.log('Response:', response);
+                const formattedCampaigns = response.data.campaign.map(campaign => ({
+                    id: campaign._id,
+                    name: campaign.name,
+                    description: campaign.description,
+                    organization: campaign.organization,
+                    donatedAmount: null 
+                }));
+                setCampaigns(formattedCampaigns);
+                setLoading(false);
+            } catch (e) {
+                console.error('Error fetching campaigns:', e);
+                setError('Failed to load campaigns');
+                setLoading(false);
+            }
+        };
 
-    // Search and filter campaigns
-    const filteredCampaigns = dummyCampaigns.filter(campaign =>
+        fetchCampaigns();
+    }, []);
+
+  
+    const filteredCampaigns = campaigns.filter(campaign =>
         campaign.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Pagination logic
+ 
     const indexOfLastCampaign = currentPage * campaignsPerPage;
     const indexOfFirstCampaign = indexOfLastCampaign - campaignsPerPage;
     const currentCampaigns = filteredCampaigns.slice(indexOfFirstCampaign, indexOfLastCampaign);
@@ -28,6 +51,14 @@ const Dashboard = () => {
     const totalPages = Math.ceil(filteredCampaigns.length / campaignsPerPage);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
 
     return (
         <div className="ml-64 p-6 bg-gray-50 min-h-screen">
@@ -46,16 +77,18 @@ const Dashboard = () => {
                     <thead>
                         <tr className="bg-blue-500 text-white">
                             <th className="border p-4">Campaign Name</th>
-                            <th className="border p-4">Date</th>
-                            <th className="border p-4">Donated Amount</th>
+                            <th className="border p-4">Description</th>
+                            <th className="border p-4">Organization</th>
+                            <th className="border p-4">Donation</th>
                         </tr>
                     </thead>
                     <tbody>
                         {currentCampaigns.map(campaign => (
                             <tr key={campaign.id} className="hover:bg-gray-100">
                                 <td className="border p-4 text-gray-800">{campaign.name}</td>
-                                <td className="border p-4 text-gray-800">{campaign.date}</td>
-                                <td className="border p-4 text-gray-800">${campaign.donatedAmount}</td>
+                                <td className="border p-4 text-gray-800">{campaign.description}</td>
+                                <td className="border p-4 text-gray-800">{campaign.organization}</td>
+                                <td className="border p-4 text-gray-800">${campaign.donatedAmount ?? 'N/A'}</td>
                             </tr>
                         ))}
                     </tbody>

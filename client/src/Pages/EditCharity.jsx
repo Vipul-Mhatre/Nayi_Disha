@@ -26,7 +26,8 @@ const EditCharity = () => {
           organization: campaign.organization,
           totalAmtCollected: campaign.totalAmtCollected || 0,
           totalAmtRequired: campaign.totalAmtRequired || 0,
-          daysLeft: campaign.daysLeft || 0
+          daysLeft: campaign.daysLeft || 0,
+          ended: campaign.ended || false
         }));
         setCampaigns(formattedCampaigns);
         setLoading(false);
@@ -74,6 +75,27 @@ const EditCharity = () => {
     }
   };
 
+  const handleEndCampaign = async (id) => {
+    try {
+      await axios.patch(`http://localhost:5000/end-campaign/${id}`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setCampaigns(prevCampaigns =>
+        prevCampaigns.map(campaign =>
+          campaign.id === id ? { ...campaign, ended: true } : campaign
+        )
+      );
+    } catch (e) {
+      console.error('Error ending campaign:', e);
+      setError('Failed to end campaign');
+    }
+  };
+
+  // Sort campaigns: Active campaigns first, ended campaigns last
+  const sortedCampaigns = [...campaigns].sort((a, b) => a.ended - b.ended);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -86,8 +108,8 @@ const EditCharity = () => {
     <div className='ml-44 bg-slate-900 w-full text-center text-white min-h-screen flex flex-wrap items-center justify-center flex-col'>
       <h1 className='py-10 text-3xl font-semibold'>Edit Campaigns</h1>
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
-        {campaigns.map((campaign, index) => (
-          <div key={campaign.id} className='max-w-xs bg-white rounded-xl shadow-lg overflow-hidden border border-green-200 shadow-green-100 relative'>
+        {sortedCampaigns.map((campaign, index) => (
+          <div key={campaign.id} className={`max-w-xs rounded-xl shadow-lg overflow-hidden border relative ${campaign.ended ? 'bg-gray-300' : 'bg-white'}`}>
             <img
               className='w-full h-30 object-cover'
               src='https://media.istockphoto.com/id/1385717484/photo/ukrainians-outside-the-train-station-in-lviv-ukraine.jpg?s=612x612&w=0&k=20&c=V8qA7qRiFAuPl2OqJyLCOviMKEZufVeCFBPBj2MrwcU='
@@ -156,6 +178,7 @@ const EditCharity = () => {
                   Days Left
                 </div>
               </div>
+              {/* Save Changes Button */}
               {editingCampaignId === campaign.id && (
                 <button
                   onClick={handleSaveChanges}
@@ -163,6 +186,21 @@ const EditCharity = () => {
                 >
                   Save Changes
                 </button>
+              )}
+              {/* End Campaign Button */}
+              {!campaign.ended && (
+                <button
+                  onClick={() => handleEndCampaign(campaign.id)}
+                  className='mt-4 py-2 px-4 bg-red-600 text-white rounded'
+                >
+                  End Campaign
+                </button>
+              )}
+              {/* Campaign Ended Message */}
+              {campaign.ended && (
+                <div className='mt-4 py-2 px-4 bg-gray-600 text-white rounded'>
+                  Campaign Ended
+                </div>
               )}
             </div>
             <button

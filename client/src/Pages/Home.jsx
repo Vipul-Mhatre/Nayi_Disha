@@ -80,7 +80,6 @@ const Home = () => {
                   <span className='font-bold'>{campaign.daysLeft}</span> Days Left
                 </div>
               </div>
-              {/* Progress Bar */}
               <div className='w-full bg-gray-300 rounded-full h-2.5 mt-2'>
                 <div
                   className='bg-green-600 h-2.5 rounded-full'

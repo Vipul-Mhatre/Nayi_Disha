@@ -10,6 +10,8 @@ import Register from './Pages/Register';
 import Dashboard from './Pages/Dashboard';
 import Widget from './Pages/Widget';
 
+import Ongoing from './Pages/Ongoing';
+
 function App() {
   return (
     <>
@@ -19,6 +21,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>} />
+       
+        <Route path="/ongoing" element={<ProtectedRoute><Ongoing/></ProtectedRoute>} />
       </Routes>
       <ToastContainer/>
     </>

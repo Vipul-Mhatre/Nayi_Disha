@@ -77,7 +77,7 @@ const Navbar = () => {
                                 <>
                                     <p
                                         onClick={handleProfileClick}
-                                        className="flex items-center mt-44 py-3 px-5 font-medium text-center text-blue-600 border border-blue-600 bg-transparent hover:bg-blue-600 hover:text-white active:text-white active:bg-blue-700 rounded-lg shadow-lg cursor-pointer transition-colors duration-300 mb-3"
+                                        className="flex items-center mt-36 py-3 px-5 font-medium text-center text-blue-600 border border-blue-600 bg-transparent hover:bg-blue-600 hover:text-white active:text-white active:bg-blue-700 rounded-lg shadow-lg cursor-pointer transition-colors duration-300 mb-3"
                                     >
                                         <FaUserCircle className="mr-3 text-2xl" />
                                         Dashboard

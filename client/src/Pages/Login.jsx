@@ -30,6 +30,7 @@ const Login = () => {
             if (res.status === 200) {
                 
                 localStorage.setItem('token', data.token);
+                localStorage.setItem('role', role);
                 setIsLoggedIn(true);
                 toast.success("login successfull");
                 navigate('/');

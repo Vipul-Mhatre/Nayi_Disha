@@ -39,6 +39,7 @@ const Register = () => {
             console.log("data", data);
             if (res.status === 200) {
                 storeTokenInLS(data.token);
+                localStorage.setItem('role', role);
                 setIsLoggedIn(true);
                 toast.success("Registration successful");
                 navigate('/login');

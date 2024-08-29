@@ -38,7 +38,7 @@ const Dropdown = ({ head, data }) => {
 
             {isOpen && (
                 <div id="dropdownSearch" className="md:w-3/12 w-10/12 absolute z-10 mt-80 bg-white rounded-lg shadow dark:bg-gray-700">
-                    <div className="p-3">
+                    {/* <div className="p-3">
                         <label htmlFor="input-group-search" className="sr-only">Search</label>
                         <div className="relative">
                             <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -65,8 +65,8 @@ const Dropdown = ({ head, data }) => {
                                 placeholder="Search user"
                             />
                         </div>
-                    </div>
-                    <ul className="h-48 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSearchButton">
+                    </div> */}
+                    <ul className="h-48 p-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSearchButton">
                         {data && data.length > 0 ? data.map((row, index) => (
                             <li key={index} className="flex items-center ps-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
                                 <label onClick={() => { setRole(row.label.toLowerCase()); setLabel(row.label);setIsOpen(!isOpen)}} htmlFor={`checkbox-item-${index}`} className="w-full py-2 ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">

@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const authMiddleware = require("../middleware/authMiddleware");
 const User = require('../models/User');
 const Organization = require('../models/Organization');
+const Campaign = require('../models/Campaign');
 const secret = process.env.SECRET_KEY;
 
 router.post('/login', async (req, res) => {
@@ -89,6 +90,82 @@ router.post('/register', async (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
     }
 });
+
+router.post('/create-campaign', authMiddleware(Organization), async (req, res) => {
+    const { name, description, donors, totalAmtCollected } = req.body;
+    const org = req.user;
+    if (!name || !description) {
+        return res.status(422).json({ error: "Please add all required fields" });
+    }
+    const amt = totalAmtCollected ? totalAmtCollected : 0;
+    try {
+        const campaign = new Campaign({ name, description, donors, organization:org._id, totalAmtCollected:amt });
+        await campaign.save();
+        return res.status(200).json({message:"Campaign started successfully"})
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({ error: "Internal Server Error" })
+    }
+})
+
+router.patch('/update-campaign/:id', authMiddleware(Organization), async (req, res) => {
+    const { id } = req.params;
+    const updateFields = req.body;
+
+    try {
+        const campaign = await Campaign.findById(id);
+        if (!campaign) return res.status(404).json({ error: "Campaign not found" });
+        await Campaign.findByIdAndUpdate(
+            id,
+            { $set: updateFields },
+            { new: true, useFindAndModify: false }
+        );
+        return res.status(200).json({ "Fields updated": updateFields });
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({error: "Internal Server Error"})
+    }
+})
+
+router.get('/get-campaign/:id', authMiddleware(Organization || User), async (req, res) => {
+    const { id } = req.params;
+    try {
+        const campaign = await Campaign.findById(id);
+        return res.status(200).json({ campaign });
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({ error: "Internal Server Error" })
+    }
+})
+
+router.get('/get-campaigns', authMiddleware(Organization || User), async (req, res) => {
+    try {
+        const campaign = await Campaign.find();
+        return res.status(200).json({ campaign });
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({ error: "Internal Server Error" })
+    }
+})
+
+router.patch('/end-campaign/:id', authMiddleware(Organization), async (req, res) => {
+    const { id } = req.params;
+    const updateFields = req.body;
+
+    try {
+        const campaign = await Campaign.findById(id);
+        if (!campaign) return res.status(404).json({ error: "Campaign not found" });
+        await Campaign.findByIdAndUpdate(
+            id,
+            { ended: true },
+            { new: true, useFindAndModify: false }
+        );
+        return res.status(200).json({ message:"Campaign Ended Successfully !!!" });
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({ error: "Internal Server Error" })
+    }
+})
 
 
 router.post('/send-notification', authMiddleware, async (req, res) => {

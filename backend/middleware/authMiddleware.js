@@ -1,34 +1,37 @@
 const jwt = require('jsonwebtoken');
-const User = require("../models/User");
 
-const authMiddleware = async (req, res, next) => {
-    const token = req.header('Authorization');
+const authMiddleware = (Model) => {
+    return async (req, res, next) => {
+        const token = req.header('Authorization');
+        console.log("Request Headers: ", req.headers);
 
-    if (!token) {
-        return res.status(401).json({ message: "Unauthorized: Token not provided" });
-    }
-
-    const jwtToken = token.replace(/^Bearer\s/, "").trim();
-
-    try {
-        const secretKey = process.env.JWT_SECRET_KEY;
-        const isVerified = jwt.verify(jwtToken, secretKey);
-
-        const userData = await User.findById(isVerified._id).select('-password');
-
-        if (!userData) {
-            return res.status(404).json({ message: "User not found" });
+        if (!token) {
+            return res.status(401).json({ message: "Unauthorized HTTP, Token not provided" });
         }
 
-        req.user = userData;
-        req.token = jwtToken;
-        req.userID = userData._id;
+        const jwtToken = token.replace(/^Bearer\s/, "").trim();
+        console.log("Token from middleware ", jwtToken);
 
-        next();
-    } catch (error) {
-        console.error("Error during token verification:", error);
-        return res.status(401).json({ message: "Unauthorized: Invalid token" });
-    }
-}
+        try {
+            const isVerified = jwt.verify(jwtToken, process.env.JWT_SECRET_KEY);
+            console.log("Decoded Token: ", isVerified);
+
+            const userData = await Model.findOne({ _id: isVerified._id }).select({ password: 0 });
+
+            if (!userData) {
+                console.log("User not found");
+                return res.status(401).json({ message: "User not found" });
+            }
+            req.user = userData;
+            req.token = token;
+            req.userID = userData._id;
+
+            next();
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ message: "Internal Server Error" });
+        }
+    };
+};
 
 module.exports = authMiddleware;

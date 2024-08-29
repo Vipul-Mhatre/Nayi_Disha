@@ -5,7 +5,9 @@ const campSchema = new Schema({
     name: { type: String, required: true },
     description: { type: String, required: true },
     donors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    organization: { type: String, required: true }
+    organization: { type: String, required: true },
+    totalAmtCollected: { type: String, required: true },
+    ended: {type:String, default: false}
 });
 
 const Campaign = mongoose.model("Campaign", campSchema);

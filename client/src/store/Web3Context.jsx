@@ -1,4 +1,4 @@
-import { Contract, ethers } from 'ethers';  // Use ethers directly for both Contract and providers
+import { Contract, ethers } from 'ethers';
 import abi from './abi.json';
 import { createContext, useEffect, useState } from 'react';
 
@@ -38,6 +38,7 @@ export const Web3ProviderComponent = ({ children }) => {
                     contractABI,
                     signer
                 );
+                console.log(contract);
                 setAddress(account[0]);
                 setState({ provider, signer, contract });
 
@@ -49,6 +50,10 @@ export const Web3ProviderComponent = ({ children }) => {
             alert("An error occurred while connecting to the wallet. Please try again.");
         }
     }
+
+    useEffect(() => {
+        connectWallet();
+    },[])
 
     return (
         <Web3Context.Provider value={{ address, state, connectWallet, address }}>

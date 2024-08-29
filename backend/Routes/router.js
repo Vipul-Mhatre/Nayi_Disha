@@ -140,7 +140,7 @@ router.get('/get-campaign/:id', authMiddleware(Organization || User), async (req
     }
 })
 
-router.get('/get-campaigns', authMiddleware(Organization || User), async (req, res) => {
+router.get('/get-campaigns', async (req, res) => {
     try {
         const campaign = await Campaign.find();
         return res.status(200).json({ campaign });

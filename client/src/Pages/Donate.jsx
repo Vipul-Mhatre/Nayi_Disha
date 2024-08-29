@@ -14,7 +14,7 @@ const Donate = () => {
         try {
             if (contract) {
                 const transaction = await contract.donate(charityId, {
-                    value: ethers.utils.parseEther(amount),  // Parse amount to Ether
+                    value: ethers.utils.parseEther(amount),  
                 });
                 console.log('Transaction:', transaction);
                 setTrxHash(transaction.hash);

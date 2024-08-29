@@ -22,6 +22,7 @@ const authMiddleware = (Model) => {
                 console.log("User not found");
                 return res.status(401).json({ message: "User not found" });
             }
+            console.log(userData)
             req.user = userData;
             req.token = token;
             req.userID = userData._id;

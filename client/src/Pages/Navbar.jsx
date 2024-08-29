@@ -10,9 +10,12 @@ const Navbar = () => {
     const { connectWallet, address } = useContext(Web3Context);
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+    console.log('role', role);
 
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('role');
         navigate('/login');
     };
 
@@ -24,15 +27,23 @@ const Navbar = () => {
         setTheme(theme === 'light' ? 'dark' : 'light');
     };
 
-    const navigation = [
-        { title: "Home", path: "/" },
-        { title: "Ongoing Campaigns", path: "/ongoing" },
-        { title: "Upcoming Campaigns", path: "/" },
-        { title: "Organizations", path: "/" }
+    const navigationUser = [
+        { title: 'Home', path: '/' },
+        { title: 'Ongoing Campaigns', path: '/ongoing' },
+        { title: 'Upcoming Campaigns', path: '/' },
+        { title: 'Organizations', path: '/' },
+    ];
+
+    const navigationOrg = [
+        { title: 'Home', path: '/' },
+        { title: 'Create Campaign', path: '/register-campaign' },
+        { title: 'Edit Campaign', path: '/edit-campaign' },
+        { title: 'All Campaign', path: '/all-campaign' },
+        { title: 'Donors', path: '/donors' },
     ];
 
     return (
-        <div className={`${token ? "" : "hidden"}`}>
+        <div className={`${token ? '' : 'hidden'}`}>
             <button
                 className="fixed top-4 left-4 z-50 text-gray-500 hover:text-gray-800 md:hidden"
                 onClick={() => setState(!state)}
@@ -47,7 +58,7 @@ const Navbar = () => {
                         />
                     </svg>
                 ) : (
-                    <div className='bg-slate-200 p-2 rounded-full'>
+                    <div className="bg-slate-200 p-2 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                         </svg>
@@ -58,26 +69,46 @@ const Navbar = () => {
             <nav className={`fixed top-0 border-r border-r-white left-0 h-full w-64 bg-gray-900 transform ${state ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out md:translate-x-0 z-40`}>
                 <div className="p-4">
                     <ul className="space-y-4">
-                        <li className='flex justify-center align-middle items-center text-white gap-1 py-7'><img src='logo192.png' className='w-7' alt="Logo" />NayiDisha</li>
+                        <li className="flex justify-center align-middle items-center text-white gap-1 py-7">
+                            <img src="logo192.png" className="w-7" alt="Logo" />
+                            NayiDisha
+                        </li>
                         <hr />
                         <li>
-                            <button onClick={() => connectWallet()} className="flex items-center py-3 px-5 font-medium text-center text-blue-600 border border-blue-600 bg-transparent hover:bg-blue-600 hover:text-white active:text-white active:bg-blue-700 rounded-lg shadow-lg cursor-pointer transition-colors duration-300 mb-3">
-                                {address ? `${address.slice(0, 15)}...${address.slice(-4)}` : "Connect Wallet"}
+                            <button
+                                onClick={connectWallet}
+                                className="flex items-center py-3 px-5 font-medium text-center text-blue-600 border border-blue-600 bg-transparent hover:bg-blue-600 hover:text-white active:text-white active:bg-blue-700 rounded-lg shadow-lg cursor-pointer transition-colors duration-300 mb-3"
+                            >
+                                {address ? `${address.slice(0, 15)}...${address.slice(-4)}` : 'Connect Wallet'}
                             </button>
                         </li>
-                        {navigation.map((item, idx) => (
-                            <li key={idx} onClick={() => setState(false)} className="text-gray-200 hover:bg-slate-600 rounded-lg">
-                                <Link to={item.path} className="block py-2 px-4">
-                                    {item.title}
-                                </Link>
-                            </li>
-                        ))}
+
+                        {role === 'user' && (
+                            navigationUser.map((item, idx) => (
+                                <li key={idx} onClick={() => setState(false)} className="text-gray-200 hover:bg-slate-600 rounded-lg">
+                                    <Link to={item.path} className="block py-2 px-4">
+                                        {item.title}
+                                    </Link>
+                                </li>
+                            ))
+                        )}
+
+                        {role === 'organization' && (
+                            navigationOrg.map((item, idx) => (
+                                <li key={idx} onClick={() => setState(false)} className="text-gray-200 hover:bg-slate-600 rounded-lg">
+                                    <Link to={item.path} className="block py-2 px-4">
+                                        {item.title}
+                                    </Link>
+                                </li>
+                            ))
+                        )}
+
                         <li className="mt-36">
                             {isLoggedIn && (
                                 <>
                                     <p
                                         onClick={handleProfileClick}
-                                        className="flex items-center mt-36 py-3 px-5 font-medium text-center text-blue-600 border border-blue-600 bg-transparent hover:bg-blue-600 hover:text-white active:text-white active:bg-blue-700 rounded-lg shadow-lg cursor-pointer transition-colors duration-300 mb-3"
+                                        className="flex items-center py-3 px-5 font-medium text-center text-blue-600 border border-blue-600 bg-transparent hover:bg-blue-600 hover:text-white active:text-white active:bg-blue-700 rounded-lg shadow-lg cursor-pointer transition-colors duration-300 mb-3"
                                     >
                                         <FaUserCircle className="mr-3 text-2xl" />
                                         Dashboard

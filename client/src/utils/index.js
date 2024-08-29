@@ -18,7 +18,7 @@ export const checkIfImage = (url, callback) => {
   if (img.complete){ 
     callback(true)
     return;
-  };
+  }
 
   img.onload = () => callback(true);
   img.onerror = () => callback(false);

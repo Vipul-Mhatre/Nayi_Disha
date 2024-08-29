@@ -218,6 +218,23 @@ router.get('/get-notification', authMiddleware, async (req, res) => {
     }
 });
 
+router.get('/ongoing-campaigns', async (req, res) => {
+    try {
+        const campaigns = await Campaign.find();  
+        let camp_arr = [];  
+        for (const campaign of campaigns) {
+            if (campaign.ended === false) {
+                camp_arr.push(campaign);  
+            }
+        }
+
+        return res.status(200).json({ campaigns: camp_arr });  
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({ error: "Internal Server Error" });  
+    }
+});
+
 router.get('/user', authMiddleware, (req, res) => {
     try {
         const userData = req.user;

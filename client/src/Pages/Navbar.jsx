@@ -27,7 +27,7 @@ const Navbar = () => {
 
     const navigation = [
         { title: "Home", path: "/" },
-        { title: "Ongoing Campaigns", path: "/" },
+        { title: "Ongoing Campaigns", path: "/ongoing" },
          {title:"Upcoming Campaigns" , path:"/"},
          {title:"Organizations" , path:"/"}
     ];

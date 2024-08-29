@@ -38,7 +38,7 @@ const Home = () => {
 }, []);
 
 return (
-  <div className='ml-36 bg-slate-900 w-full text-center text-white min-h-screen flex items-center justify-center'>
+  <div className='ml-36 mr-36 bg-slate-900 w-full text-center text-white min-h-screen flex items-center justify-center'>
     <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
       {Array.from({ length: 6 }).map((_, index) => (
         <div key={index} className='max-w-xs bg-white rounded-lg shadow-lg overflow-hidden'>

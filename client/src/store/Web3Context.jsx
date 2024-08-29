@@ -22,6 +22,7 @@ export const Web3ProviderComponent = ({ children }) => {
                 const account = await ethereum.request({
                     method: "eth_requestAccounts",
                 });
+                setAddress(account[0]);
                 ethereum.on("chainChanged", () => {
                     window.location.reload();
                 });
@@ -49,12 +50,8 @@ export const Web3ProviderComponent = ({ children }) => {
         }
     }
 
-    useEffect(() => {
-        connectWallet();
-    }, []);
-
     return (
-        <Web3Context.Provider value={{ address, state }}>
+        <Web3Context.Provider value={{ address, state, connectWallet, address }}>
             {children}
         </Web3Context.Provider>
     );

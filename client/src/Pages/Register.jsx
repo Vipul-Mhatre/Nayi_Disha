@@ -70,7 +70,7 @@ const Register = () => {
                         <Dropdown head="Select Your Role" data={roles} />
                     </div>
                     
-                    {role !== 'user' ? (
+                    {role === 'user' ? (
                                 <div>
                                     <label className="font-medium">
                                         Email

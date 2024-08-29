@@ -13,9 +13,9 @@ const Ongoing= () => {
         const fetchCampaigns = async () => {
             try {
                 console.log('Fetching campaigns...');
-                const response = await axios.get('http://localhost:5000/get-campaigns');
+                const response = await axios.get('http://localhost:5000/ongoing-campaigns');
                 console.log('Response:', response);
-                const formattedCampaigns = response.data.campaign.map(campaign => ({
+                const formattedCampaigns = response.data.campaigns  .map(campaign => ({
                     id: campaign._id,
                     name: campaign.name,
                     description: campaign.description,

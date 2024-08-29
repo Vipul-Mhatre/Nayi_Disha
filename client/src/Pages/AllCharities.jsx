@@ -11,11 +11,12 @@ const AllCharities = () => {
             if (contract) {
                 const charitiesList = await contract.getAllCharities();
                 console.log(charitiesList);
+
                 const parsedCharities = charitiesList.flat().map(charity => ({
                     name: charity[0] || "",
                     description: charity[1] || "",
                     charityAddress: charity[2] || "",
-                    id: charity[3] ? charity[3].toString() : "",  // Convert BigNumber to string if needed
+                    id: charity[3] ? charity[3].toString() : "", 
                     isActive: charity[4] || false,
                 }));
 
@@ -30,10 +31,9 @@ const AllCharities = () => {
         }
     };
 
-
     useEffect(() => {
         getCharities();
-    }, []); // Fetch charities when the contract is loaded
+    }, [contract]); 
 
     return (
         <div className="container md:ml-64 mx-auto my-10 p-5 border rounded-lg shadow-md">

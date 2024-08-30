@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import Web3Context from '../store/Web3Context';
 import { ethers } from 'ethers';
-import axios from 'axios'; // Import axios for making HTTP requests
+import axios from 'axios';
 import { useAuth } from '../store/auth';
 import { useNavigate } from 'react-router-dom';
 
@@ -56,40 +56,42 @@ const Donate = () => {
     };
 
     return (
-        <div className="container md:ml-64 mx-auto my-10 p-5 border rounded-lg shadow-md">
-            <h1 className="text-2xl font-semibold mb-4">Donate to Charity</h1>
-            <div className="mb-4">
-                <label className="block text-gray-700 font-medium mb-2" htmlFor="amount">
-                    Donation Amount (in Ether)
-                </label>
-                <input
-                    type="text"
-                    id="amount"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500"
-                    placeholder="Enter donation amount"
-                />
+        <div className="w-full h-screen flex justify-center items-center bg-gray-800">
+            <div className="container md:ml-64 mx-auto my-10 p-8 bg-gray-900 border border-gray-700 rounded-lg shadow-lg">
+                <h1 className="text-3xl font-bold text-white mb-6 text-center">Donate to Charity</h1>
+                <div className="mb-6">
+                    <label className="block text-gray-400 font-medium mb-2" htmlFor="amount">
+                        Donation Amount (in Ether)
+                    </label>
+                    <input
+                        type="text"
+                        id="amount"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-600 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="Enter donation amount"
+                    />
+                </div>
+                <div className="mb-6">
+                    <label className="block text-gray-400 font-medium mb-2" htmlFor="charityId">
+                        Campaign ID
+                    </label>
+                    <input
+                        type="text"
+                        id="charityId"
+                        value={charityId}
+                        onChange={(e) => setCharityId(e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-600 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="Enter campaign ID"
+                    />
+                </div>
+                <button
+                    onClick={donate}
+                    className="w-full px-4 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition-colors"
+                >
+                    Donate
+                </button>
             </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 font-medium mb-2" htmlFor="charityId">
-                    Campaign ID
-                </label>
-                <input
-                    type="text"
-                    id="charityId"
-                    value={charityId}
-                    onChange={(e) => setCharityId(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500"
-                    placeholder="Enter campaign ID"
-                />
-            </div>
-            <button
-                onClick={donate}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-500 transition-colors"
-            >
-                Donate
-            </button>
         </div>
     );
 };

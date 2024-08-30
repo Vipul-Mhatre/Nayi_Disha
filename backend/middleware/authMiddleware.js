@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const Organization = require('../models/Organization');
 
 const authMiddleware = (Model) => {
     return async (req, res, next) => {
@@ -10,11 +12,7 @@ const authMiddleware = (Model) => {
         }
 
         const jwtToken = token.replace(/^Bearer\s/, "").trim();
-
-        if (!jwtToken) {
-            return res.status(401).json({ message: "Unauthorized HTTP, Malformed token" });
-        }
-
+        console.log("Token from middleware ", jwtToken);
 
         try {
             const isVerified = jwt.verify(jwtToken, process.env.JWT_SECRET_KEY);
@@ -26,7 +24,6 @@ const authMiddleware = (Model) => {
                 console.log("User not found");
                 return res.status(401).json({ message: "User not found" });
             }
-            console.log(userData)
             req.user = userData;
             req.token = token;
             req.userID = userData._id;

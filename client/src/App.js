@@ -28,6 +28,7 @@ function App() {
         <Route path="/register-campaign" element={<RegisterCharity />} />
         <Route path="/get-charities" element={<AllCharities />} />
         <Route path="/donate" element={<Donate />} />
+        <Route path="/donate-campaign/:id" element={<Donate />} />
         <Route path="/donations" element={<Donations />} />
         <Route path="/track-donations" element={<TrackDonations />} />
         <Route path="/complete-donations" element={<CompleteDonations />} />

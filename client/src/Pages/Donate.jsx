@@ -3,7 +3,7 @@ import Web3Context from '../store/Web3Context';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import { useAuth } from '../store/auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Donate = () => {
     const [amount, setAmount] = useState('');
@@ -12,6 +12,10 @@ const Donate = () => {
     const { contract } = state;
     const { token } = useAuth();
     const navigate = useNavigate();
+    const { id } = useParams();
+    if (!id) {
+        return alert('not a valid id found')
+    }
 
     const donate = async () => {
         try {
@@ -41,7 +45,8 @@ const Donate = () => {
             const response = await axios.patch('http://localhost:5000/donate', {
                 hash,
                 amount,
-                campaignId: charityId,
+                BcampaignId: charityId,
+                campaignId: id  
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -58,7 +63,7 @@ const Donate = () => {
     return (
         <div className="w-full h-screen flex justify-center items-center bg-gray-800">
             <div className="container md:ml-64 mx-auto my-10 p-8 bg-gray-900 border border-gray-700 rounded-lg shadow-lg">
-                <h1 className="text-3xl font-bold text-white mb-6 text-center">Donate to Charity</h1>
+                <h1 className="text-3xl font-bold text-white mb-6 text-center overflow-hidden">Donate to Charity</h1>
                 <div className="mb-6">
                     <label className="block text-gray-400 font-medium mb-2" htmlFor="amount">
                         Donation Amount (in Ether)

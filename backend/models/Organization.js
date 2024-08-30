@@ -6,7 +6,7 @@ const completionSchema = new Schema({
     hash: {type:String,required: true},
     charityId: { type: String, required: true },
     amount: { type: String, required: true },
-    donorId: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    verified:{type: Boolean, default:false}
 })
 
 const orgSchema = new Schema({

@@ -40,7 +40,6 @@ const Navbar = () => {
         { title: 'All Campaign', path: '/all-campaign' },
         { title: 'Complete Donations', path: '/complete-donations' },
         { title: 'Donors', path: '/donors' },
-        { title: 'Transfer Donation', path: '/complete-donation' },
     ];
 
     return (
@@ -78,7 +77,7 @@ const Navbar = () => {
                         <li>
                             <button
                                 onClick={connectWallet}
-                                className="flex items-center py-3 px-5 font-medium text-center text-blue-600 border border-blue-600 bg-transparent hover:bg-blue-600 hover:text-white active:text-white active:bg-blue-700 rounded-lg shadow-lg cursor-pointer transition-colors duration-300 mb-3"
+                                className="flex items-center py-3 px-5 font-medium text-center text-green-600 border border-green-600 bg-transparent hover:bg-blue-600 hover:text-white active:text-white active:bg-blue-700 rounded-lg shadow-lg cursor-pointer transition-colors duration-300 mb-3"
                             >
                                 {address ? `${address.slice(0, 15)}...${address.slice(-4)}` : 'Connect Wallet'}
                             </button>
@@ -109,7 +108,7 @@ const Navbar = () => {
                                 <>
                                     <p
                                         onClick={handleProfileClick}
-                                        className="flex items-center py-3 px-5 font-medium text-center text-blue-600 border border-blue-600 bg-transparent hover:bg-blue-600 hover:text-white active:text-white active:bg-blue-700 rounded-lg shadow-lg cursor-pointer transition-colors duration-300 mb-3"
+                                        className="flex items-center py-3 px-5 font-medium text-center text-green-600 border border-green-600 bg-transparent hover:bg-green-600 hover:text-white active:text-white active:bg-green-700 rounded-lg shadow-lg cursor-pointer transition-colors duration-300 mb-3"
                                     >
                                         <FaUserCircle className="mr-3 text-2xl" />
                                         Dashboard
@@ -125,7 +124,7 @@ const Navbar = () => {
                         </li>
                         {!isLoggedIn && (
                             <li className="mt-4">
-                                <Link to="/login" className="block py-2 px-4 font-medium text-center text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 rounded-lg shadow">
+                                <Link to="/login" className="block py-2 px-4 font-medium text-center text-white bg-green-600 hover:bg-green-500 active:bg-green-700 rounded-lg shadow">
                                     Log in
                                 </Link>
                             </li>

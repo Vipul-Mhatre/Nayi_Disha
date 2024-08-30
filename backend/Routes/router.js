@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
 const authMiddleware = require("../middleware/authMiddleware");
@@ -241,6 +242,22 @@ router.patch('/donate', authMiddleware(User), async (req, res) => {
     const userId = req.user._id;
 
     try {
+        // Validate input
+        if (!amount || !BcampaignId || !campaignId || !hash) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        // Ensure amount is a number
+        const numericAmount = Number(amount);
+        if (isNaN(numericAmount)) {
+            return res.status(400).json({ error: "Invalid amount" });
+        }
+
+        // Validate and convert campaignId to ObjectId
+        if (!mongoose.Types.ObjectId.isValid(campaignId)) {
+            return res.status(400).json({ error: "Invalid campaign ID" });
+        }
+
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ error: "User not found" });
@@ -251,7 +268,7 @@ router.patch('/donate', authMiddleware(User), async (req, res) => {
             return res.status(404).json({ error: "Campaign not found" });
         }
 
-        const donation = { amount, BcampaignId, campaignId, hash };
+        const donation = { amount: numericAmount, BcampaignId, campaignId, hash };
         user.donations.push(donation);
         campaign.donors.push(userId);
 
@@ -279,6 +296,94 @@ router.get('/donations', authMiddleware(User), async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
+router.patch('/complete-donation', authMiddleware(Organization), async (req, res) => {
+    const { hash, charityId, amount } = req.body;
+    const orgId = req.user._id;
+
+    try {
+        // Input validation
+        if (!hash || !charityId || !amount) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        // Find the organization
+        const organization = await Organization.findById(orgId);
+        if (!organization) {
+            return res.status(404).json({ error: "Organization not found" });
+        }
+
+
+        organization.phone = 1234567890;
+
+        // Create the completion object
+        const completion = {
+            hash,
+            charityId,
+            amount
+        };
+
+        // Add the completion to the organization's completions array
+        organization.completions.push(completion);
+
+        // Save the updated organization
+        await organization.save();
+
+        return res.status(200).json({ message: "Donation completion recorded successfully", completion });
+    } catch (error) {
+        console.error('Error completing donation:', error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+router.get('/completions', async (req, res) => {
+    try {
+        const organization = await Organization.find();
+
+        if (!organization) {
+            return res.status(404).json({ message: "Organization not found" });
+        }
+
+        console.log(organization[0].completions);
+
+        return res.status(200).json(organization[0].completions);
+    } catch (error) {
+        console.error("Error fetching completions:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+router.patch('/verify-completion/:id', authMiddleware(User), async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user._id; // Assuming user authentication is verified with `authMiddleware`
+
+    try {
+        // Find the specific organization
+        const organization = await Organization.findOne({ 'completions._id': id });
+        if (!organization) {
+            return res.status(404).json({ message: "Organization or completion not found" });
+        }
+
+        // Find the specific completion
+        const completion = organization.completions.id(id);
+        if (!completion) {
+            return res.status(404).json({ message: "Completion not found" });
+        }
+
+        // Mark the completion as verified
+        completion.verified = true;
+
+        // Save the updated organization
+        await organization.save();
+
+        return res.status(200).json({ message: "Completion verified successfully", completion });
+    } catch (e) {
+        console.error('Error verifying completion:', e);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+
 
 router.get('/organization/campaigns', authMiddleware(Organization), async (req, res) => {
     try {
@@ -314,8 +419,9 @@ router.get('/organization/donors', authMiddleware(Organization), async (req, res
 });
 
 router.patch('/complete-donation', authMiddleware(Organization), async (req, res) => {
+    const userId = req.user._id;
     try {
-        const { charityId, amount, donorId } = req.body;
+        const { charityId, amount, hash } = req.body;
         const organization = await Organization.findById(req.userID);
 
         if (!organization) {
@@ -324,7 +430,8 @@ router.patch('/complete-donation', authMiddleware(Organization), async (req, res
         const newCompletion = {
             charityId,
             amount,
-            donorId,
+            hash,
+            donorId:userId,
         };
 
         organization.completions.push(newCompletion);

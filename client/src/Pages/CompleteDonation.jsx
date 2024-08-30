@@ -49,9 +49,14 @@ const CompleteDonations = () => {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            });
-            console.log('Donation saved:', response.data);
-            navigate('/donations');
+            }).then(response => {
+                console.log('Donation completed:', response.data);
+            })
+                .catch(error => {
+                    console.error('Error completing donation:', error);
+                });
+            // console.log('Donation saved:', response.data);
+            // navigate('/donations');
         } catch (error) {
             console.error('Error saving donation:', error);
             alert('Failed to save donation.');

@@ -63,7 +63,7 @@ const Dashboard = () => {
     return (
         <div className="ml-64 p-6 bg-gray-50 min-h-screen overflow-hidden">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-semibold text-gray-800">My Campaigns</h1>
+                <h1 className="text-3xl font-semibold text-gray-800 h-10">My Campaigns</h1>
                 <input
                     type="text"
                     placeholder="Search campaigns..."
@@ -75,7 +75,7 @@ const Dashboard = () => {
             <div className="overflow-x-auto bg-white shadow-md rounded-lg">
                 <table className="min-w-full text-left border-collapse">
                     <thead>
-                        <tr className="bg-blue-500 text-white">
+                        <tr className="bg-green-500 text-white">
                             <th className="border p-4">Campaign Name</th>
                             <th className="border p-4">Description</th>
                             <th className="border p-4">Organization</th>
@@ -99,7 +99,7 @@ const Dashboard = () => {
                     <button
                         key={i + 1}
                         className={`px-4 py-2 mx-1 rounded-lg transition-colors duration-200 ${
-                            currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            currentPage === i + 1 ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                         }`}
                         onClick={() => paginate(i + 1)}
                     >

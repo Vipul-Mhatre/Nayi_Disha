@@ -7,8 +7,8 @@ const campSchema = new Schema({
     donors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     organization: { type: String, required: true },
     photo:{type:String},
-    address:{type: String, required: true},
-    totalAmtCollected: { type: String, required: true },
+    address:{type: String },
+    totalAmtCollected: { type: String  },
     ended: {type:Boolean, default: false}
 });
 

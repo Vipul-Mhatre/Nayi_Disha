@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const token = localStorage.getItem('token');
 
@@ -42,6 +44,10 @@ const Home = () => {
     fetchCampaigns();
   }, []);
 
+  const handleClick = (id) => {
+    navigate(`/donate-campaign/${id}`);
+  }
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -55,7 +61,7 @@ const Home = () => {
       <h1 className='py-10 text-3xl font-semibold'>All Campaigns</h1>
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
         {campaigns.map((campaign, index) => (
-          <div key={campaign.id}  className='max-w-xs bg-white rounded-xl shadow-lg overflow-hidden border border-green-200 shadow-green-100 '>
+          <div onClick={() => handleClick(campaign.id)} key={campaign.id}  className='max-w-xs bg-white rounded-xl shadow-lg overflow-hidden border border-green-200 shadow-green-100 '>
             <img
               className='w-full h-30 object-cover'
               src={campaign.photo || 'https://media.istockphoto.com/id/1385717484/photo/ukrainians-outside-the-train-station-in-lviv-ukraine.jpg?s=612x612&w=0&k=20&c=V8qA7qRiFAuPl2OqJyLCOviMKEZufVeCFBPBj2MrwcU='}

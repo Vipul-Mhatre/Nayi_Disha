@@ -90,7 +90,7 @@ const Home = () => {
                 ></div>
               </div>
               <div className='mt-4 text-sm text-gray-600'>
-                <span className='font-bold'>by</span> {campaign.organization}
+                {/* <span className='font-bold'>by</span> {campaign.organization} */}
               </div>
             </div>
           </div>

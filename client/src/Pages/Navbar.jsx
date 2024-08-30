@@ -40,7 +40,7 @@ const Navbar = () => {
         { title: 'All Campaign', path: '/all-campaign' },
         { title: 'Complete Donations', path: '/complete-donations' },
         { title: 'Donors', path: '/donors' },
-        { title: 'Transfer Donation', path: '/complete-donation' },
+        
     ];
 
     return (

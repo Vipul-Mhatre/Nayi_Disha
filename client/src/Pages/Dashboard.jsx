@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import TopDonorsChart from './TopDonorsChart';
 
 const Dashboard = () => {
     const [campaigns, setCampaigns] = useState([]);
@@ -8,7 +9,8 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const campaignsPerPage = 2;
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token');
+
     useEffect(() => {
         const fetchCampaigns = async () => {
             try {
@@ -38,12 +40,10 @@ const Dashboard = () => {
         fetchCampaigns();
     }, []);
 
-  
     const filteredCampaigns = campaigns.filter(campaign =>
         campaign.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
- 
     const indexOfLastCampaign = currentPage * campaignsPerPage;
     const indexOfFirstCampaign = indexOfLastCampaign - campaignsPerPage;
     const currentCampaigns = filteredCampaigns.slice(indexOfFirstCampaign, indexOfLastCampaign);
@@ -61,7 +61,7 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="ml-64 p-6 bg-gray-50 min-h-screen">
+        <div className="ml-64 p-6 bg-gray-50 min-h-screen overflow-hidden">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-semibold text-gray-800">My Campaigns</h1>
                 <input
@@ -106,6 +106,9 @@ const Dashboard = () => {
                         {i + 1}
                     </button>
                 ))}
+            </div>
+            <div className="mt-2 overflow-hidden">
+                <TopDonorsChart />
             </div>
         </div>
     );

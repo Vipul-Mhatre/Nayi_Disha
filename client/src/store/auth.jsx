@@ -1,3 +1,4 @@
+import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 
@@ -36,6 +37,21 @@ export const AuthProvider = ({ children }) => {
         setToken(null);
         toast.success("Logged out successfully!!!");
     };
+
+    const createNotification = async (title,message) => {
+        try {
+            const response = await axios.post('http://localhost:5000/send-notification', {
+                body: JSON.stringify({
+                    title,message
+                })
+            })
+            console.log(response.data);
+            toast.success("Notification created successfully")
+        } catch (e) {
+            console.log(e);
+            toast.error("Error occured")
+        }
+    }
 
 
     const LogoutUser = () => {
@@ -77,7 +93,7 @@ export const AuthProvider = ({ children }) => {
     }, [token]);
 
     return (
-        <AuthContext.Provider value={{ setIsLoggedIn, isLoggedIn, storeTokenInLS, LogoutUser, removeTokenInLS, user, token, setEvent, event, time, theme, setTheme, roles, role, setRole }}>
+        <AuthContext.Provider value={{ setIsLoggedIn, isLoggedIn, createNotification, storeTokenInLS, LogoutUser, removeTokenInLS, user, token, setEvent, event, time, theme, setTheme, roles, role, setRole }}>
             {children}
         </AuthContext.Provider>
     );

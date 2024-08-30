@@ -18,6 +18,7 @@ import Donations from './Pages/Donations';
 import EditCharity from './Pages/EditCharity';
 import TrackDonations from './Pages/TrackDonations';
 import CompleteDonations from './Pages/CompleteDonation';
+import Donors from './Pages/Donors';
 
 function App() {
   return (
@@ -36,8 +37,8 @@ function App() {
         <Route path="/all-campaign" element={<AllCharities />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>} />
-       
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/donors" element={<ProtectedRoute><Donors/></ProtectedRoute>} />
         <Route path="/ongoing" element={<ProtectedRoute><Ongoing/></ProtectedRoute>} />
       </Routes>
       <ToastContainer/>

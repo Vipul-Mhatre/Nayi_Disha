@@ -64,9 +64,9 @@ const CompleteDonations = () => {
     };
 
     return (
-        <div className="w-full h-screen flex justify-center items-center bg-gray-800">
+        <div className="mx-7 w-full h-screen flex justify-center items-center bg-gray-800">
         <div className="container md:ml-64 mx-auto my-10 p-8 bg-gray-900 border border-gray-700 rounded-lg shadow-lg">
-            <h1 className="text-3xl font-bold text-white mb-6 text-center">Complete the Donation to Charity</h1>
+            <h1 className="text-3xl h-10 font-bold text-green-500 mb-6 text-center">Complete the Donation to Charity</h1>
             <div className="mb-6">
                 <label className="block text-gray-400 font-medium mb-2" htmlFor="amount">
                     Donation Amount (in Ether)
@@ -95,7 +95,7 @@ const CompleteDonations = () => {
             </div>
             <button
                 onClick={donate}
-                className="w-full px-4 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition-colors"
+                className="w-full px-4 py-3 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition-colors"
             >
                 Donate
             </button>

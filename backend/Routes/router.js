@@ -7,7 +7,48 @@ const authMiddleware = require("../middleware/authMiddleware");
 const User = require('../models/User');
 const Organization = require('../models/Organization');
 const Campaign = require('../models/Campaign');
+const Noti = require('../models/Notification');
+const nodemailer = require('nodemailer');
+const sendSMS = require('./sender');
 const secret = process.env.SECRET_KEY;
+
+const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    port: 465,
+    secure: true,
+    auth: {
+        user: process.env.GMAIL,
+        pass: process.env.GPASSWORD
+    },
+    pool: true,
+    rateLimit: true,
+    maxConnections: 5,
+    maxMessages: 100,
+    tls: {
+        rejectUnauthorized: false
+    }
+});
+
+const sendMail = async (options) => {
+    try {
+        const info = await transporter.sendMail({
+            from: process.env.GMAIL,
+            to: options.to,
+            subject: options.title,
+            text: "Hello world?",
+            html: `<b>${options.subject}</b>`,
+            attachments: options.attachments
+        });
+        console.log("Message sent: %s", info.messageId);
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
+};
+
+const encryptData = (data) => {
+    return AES.encrypt(data, secret).toString();
+};
+
 
 router.post('/login', async (req, res) => {
     const { name, email, type, password } = req.body;
@@ -172,21 +213,20 @@ router.patch('/end-campaign/:id', authMiddleware(Organization), async (req, res)
 })
 
 
-router.post('/send-notification', authMiddleware, async (req, res) => {
+router.post('/send-notification', async (req, res) => {
     const { title, message } = req.body;
     if (!title || !message) {
         return res.status(400).json({ error: 'Title and message are required' });
     }
 
     try {
-        const encryptedTitle = encrypt(title);
-        const encryptedMessage = encrypt(message);
         const noti = new Noti({
-            title: encryptedTitle,
-            message: encryptedMessage
+            title,
+            message
         });
 
         const savedNoti = await noti.save();
+        sendSMS(message);
         sendMail({
             to: process.env.GMAILH,
             subject: title,
@@ -203,17 +243,8 @@ router.post('/send-notification', authMiddleware, async (req, res) => {
 router.get('/get-notification', authMiddleware, async (req, res) => {
     try {
         const noti = await Noti.find();
-        const decryptedNoti = noti.map(noti => {
-            const decryptedTitle = noti.title && encryptData(decrypt(noti?.title?.encryptedData, noti?.title?.iv, noti?.title?.key));
-            const decryptedMessage = encryptData(decrypt(noti?.message?.encryptedData, noti?.message?.iv, noti?.message?.key));
-
-            return {
-                id: noti._id.toString(),
-                title: decryptedTitle,
-                message: decryptedMessage
-            }
-        });
-        return res.status(200).json({ "Notification": decryptedNoti });
+        console.log(noti);
+        return res.status(200).json({ "Notification": noti });
     } catch (e) {
         console.error(e);
         return res.status(400).json({ "Error occured": e });

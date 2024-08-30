@@ -37,8 +37,8 @@ const AllCharities = () => {
     }, [contract]); 
 
     return (
-        <div className="container md:ml-64 mx-auto my-10 p-5 border rounded-lg shadow-md">
-            <h1 className="text-2xl font-semibold mb-4">All Registered Charities</h1>
+        <div className="bg-gray-800 w-screen h-screen text-white container md:ml-64 pt-24 pl-10">
+            <h1 className="text-2xl font-semibold mb-4 text-green-500">All Registered Charities</h1>
             {charities.length === 0 ? (
                 <p>No charities registered yet.</p>
             ) : (

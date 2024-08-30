@@ -61,13 +61,13 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="ml-64 p-6 bg-gray-50 min-h-screen overflow-hidden">
+        <div className="ml-64 p-6 bg-gray-800 text-green-500 min-h-screen overflow-hidden">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-semibold text-gray-800 h-10">My Campaigns</h1>
+                <h1 className="text-3xl font-semibold text-green-500 h-10">My Campaigns</h1>
                 <input
                     type="text"
                     placeholder="Search campaigns..."
-                    className="p-2 border rounded-lg w-72 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="p-2 border rounded-lg w-72 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />

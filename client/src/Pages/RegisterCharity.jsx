@@ -3,12 +3,14 @@ import Web3Context from '../store/Web3Context';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../store/auth';
 
 const RegisterCharity = () => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [charityAddress, setCharityAddress] = useState('');
     const { state } = useContext(Web3Context);
+    const { createNotification } = useAuth();
     const navigate = useNavigate();
     const { contract } = state;
     const [files, setFiles] = useState([]);
@@ -102,6 +104,10 @@ const RegisterCharity = () => {
             });
 
             toast.success(response.data.message);
+            createNotification('Campaign started', `
+                New campaign named ${name} was started by Kaushal Jha.
+                Description: ${description}.
+                `)
             console.log('Campaign saved to backend:', response.data);
             navigate('/get-charities');
         } catch (error) {
@@ -111,7 +117,7 @@ const RegisterCharity = () => {
     };
 
     return (
-        <div className='w-full h-screen flex justify-center items-center bg-gray-800'>
+        <div className='mx-5 w-full h-screen flex justify-center items-center bg-gray-800'>
         <div className="container md:ml-64 mx-auto my-10 p-5 bg-gray-900 border border-gray-700 rounded-lg shadow-lg text-white">
             <h1 className="text-3xl font-semibold mb-6 text-center overflow-hidden">Register Campaign</h1>
             <div className="mb-6">
@@ -178,7 +184,7 @@ const RegisterCharity = () => {
             </div>
             <button
                 onClick={registerCharity}
-                className="w-full py-3 mt-6 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-500 transition-colors"
+                className="w-full py-3 mt-6 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition-colors"
             >
                 Register Campaign
             </button>

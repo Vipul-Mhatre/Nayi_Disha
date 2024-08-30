@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FaComments } from 'react-icons/fa';
 
 const Home = () => {
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const token = localStorage.getItem('token');
 
@@ -13,9 +15,9 @@ const Home = () => {
       try {
         console.log(token);
         console.log('Fetching campaigns from home ...');
-        const response = await axios.get('http://localhost:5000/get-campaigns',{
-          headers:{
-            Authorization:`Bearer ${token}`
+        const response = await axios.get('http://localhost:5000/get-campaigns', {
+          headers: {
+            Authorization: `Bearer ${token}`
           }
         });
         console.log('Response:', response);
@@ -25,10 +27,10 @@ const Home = () => {
           description: campaign.description,
           organization: campaign.organization,
           photo: campaign.photo,
-          donatedAmount: null, 
-          totalAmtCollected: campaign.totalAmtCollected || 0, 
-          totalAmtRequired: campaign.totalAmtRequired || 0, 
-          daysLeft: campaign.daysLeft || 0 
+          donatedAmount: null,
+          totalAmtCollected: campaign.totalAmtCollected || 0,
+          totalAmtRequired: campaign.totalAmtRequired || 0,
+          daysLeft: campaign.daysLeft || 0
         }));
         setCampaigns(formattedCampaigns);
         setLoading(false);
@@ -41,6 +43,14 @@ const Home = () => {
 
     fetchCampaigns();
   }, []);
+
+  const openChat = () => {
+    setIsChatOpen(true);
+  };
+
+  const closeChat = () => {
+    setIsChatOpen(false);
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -55,7 +65,7 @@ const Home = () => {
       <h1 className='py-10 text-3xl font-semibold'>All Campaigns</h1>
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
         {campaigns.map((campaign, index) => (
-          <div key={campaign.id}  className='max-w-xs bg-white rounded-xl shadow-lg overflow-hidden border border-green-200 shadow-green-100 '>
+          <div key={campaign.id} className='max-w-xs bg-white rounded-xl shadow-lg overflow-hidden border border-green-200 shadow-green-100'>
             <img
               className='w-full h-30 object-cover'
               src={campaign.photo || 'https://media.istockphoto.com/id/1385717484/photo/ukrainians-outside-the-train-station-in-lviv-ukraine.jpg?s=612x612&w=0&k=20&c=V8qA7qRiFAuPl2OqJyLCOviMKEZufVeCFBPBj2MrwcU='}
@@ -89,13 +99,40 @@ const Home = () => {
                   }}
                 ></div>
               </div>
-              <div className='mt-4 text-sm text-gray-600'>
-                {/* <span className='font-bold'>by</span> {campaign.organization} */}
-              </div>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Chat icon */}
+      <button
+        className='fixed bottom-10 right-10 bg-green-600 text-white p-4 rounded-full shadow-lg'
+        onClick={openChat}
+      >
+        <FaComments size={24} />
+      </button>
+
+      {/* Chat Modal */}
+      {isChatOpen && (
+        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
+          <div className='bg-white rounded-lg overflow-hidden w-full h-full max-w-5xl '>
+            <div className='flex justify-between items-center p-4 bg-green-600 text-white'>
+              <h2 className='text-xl'>Chat with Us</h2>
+              <button className='text-xl' onClick={closeChat}>
+                &times;
+              </button>
+            </div>
+            <div className='p-4 h-full overflow-hidden'>
+              <iframe
+                src='https://chatbot-ml.vercel.app/'
+                width='100%'
+                height='100%'
+                style={{ border: 'none', overflow: 'hidden' }}
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

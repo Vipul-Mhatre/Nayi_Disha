@@ -10,7 +10,11 @@ const authMiddleware = (Model) => {
         }
 
         const jwtToken = token.replace(/^Bearer\s/, "").trim();
-        console.log("Token from middleware ", jwtToken);
+
+        if (!jwtToken) {
+            return res.status(401).json({ message: "Unauthorized HTTP, Malformed token" });
+        }
+
 
         try {
             const isVerified = jwt.verify(jwtToken, process.env.JWT_SECRET_KEY);

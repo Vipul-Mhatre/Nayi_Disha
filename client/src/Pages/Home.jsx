@@ -24,6 +24,7 @@ const Home = () => {
           name: campaign.name,
           description: campaign.description,
           organization: campaign.organization,
+          photo: campaign.photo,
           donatedAmount: null, 
           totalAmtCollected: campaign.totalAmtCollected || 0, 
           totalAmtRequired: campaign.totalAmtRequired || 0, 
@@ -57,7 +58,7 @@ const Home = () => {
           <div key={campaign.id}  className='max-w-xs bg-white rounded-xl shadow-lg overflow-hidden border border-green-200 shadow-green-100 '>
             <img
               className='w-full h-30 object-cover'
-              src='https://media.istockphoto.com/id/1385717484/photo/ukrainians-outside-the-train-station-in-lviv-ukraine.jpg?s=612x612&w=0&k=20&c=V8qA7qRiFAuPl2OqJyLCOviMKEZufVeCFBPBj2MrwcU=' 
+              src={campaign.photo || 'https://media.istockphoto.com/id/1385717484/photo/ukrainians-outside-the-train-station-in-lviv-ukraine.jpg?s=612x612&w=0&k=20&c=V8qA7qRiFAuPl2OqJyLCOviMKEZufVeCFBPBj2MrwcU='}
               alt={campaign.name}
             />
             <div className='p-4'>

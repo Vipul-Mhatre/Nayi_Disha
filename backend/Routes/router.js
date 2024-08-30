@@ -101,7 +101,8 @@ router.post('/create-campaign', authMiddleware(Organization), async (req, res) =
     }
     const amt = totalAmtCollected ? totalAmtCollected : 0;
     try {
-        const campaign = new Campaign({ name, description, donors, address, photo, organization:org._id, totalAmtCollected:amt });
+        const campaign = new Campaign({ name, description, donors, address, photo, organization: org._id, totalAmtCollected: amt });
+        console.log(campaign);
         await campaign.save();
         return res.status(200).json({message:"Campaign started successfully"})
     } catch (e) {
@@ -309,6 +310,31 @@ router.get('/organization/donors', authMiddleware(Organization), async (req, res
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+router.patch('/complete-donation', authMiddleware(Organization), async (req, res) => {
+    try {
+        const { charityId, amount, donorId } = req.body;
+        const organization = await Organization.findById(req.userID);
+
+        if (!organization) {
+            return res.status(404).json({ message: "Organization not found" });
+        }
+        const newCompletion = {
+            charityId,
+            amount,
+            donorId,
+        };
+
+        organization.completions.push(newCompletion);
+
+        await organization.save();
+
+        return res.status(200).json({ message: "Donation completion recorded successfully", completions: organization.completions });
+    } catch (error) {
+        console.error("Error completing donation:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
     }
 });
 

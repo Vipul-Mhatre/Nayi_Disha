@@ -21,20 +21,22 @@ export const AuthProvider = ({ children }) => {
 
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [user, setUser] = useState("");
-    const [isLoggedIn, setIsLoggedIn] = useState(!token);
+    const [isLoggedIn, setIsLoggedIn] = useState(!!token);
     const [event, setEvent] = useState(null);
     const [theme, setTheme] = useState("dark");
     const [role, setRole] = useState();
 
     const storeTokenInLS = (serverToken) => {
-        localStorage.setItem(token, serverToken);
+        localStorage.setItem('token', serverToken);
+        setToken(serverToken);
     };
 
     const removeTokenInLS = () => {
-        localStorage.removeItem(token);
+        localStorage.removeItem('token');
         setToken(null);
         toast.success("Logged out successfully!!!");
     };
+
 
     const LogoutUser = () => {
         removeTokenInLS();
@@ -42,7 +44,6 @@ export const AuthProvider = ({ children }) => {
 
     const userAuthentication = async () => {
         if (token) {
-            console.log(token);
             try {
                 const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/user`, {
                     method: "GET",
@@ -50,10 +51,11 @@ export const AuthProvider = ({ children }) => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-
+                
                 if (response.ok) {
                     const data = await response.json();
                     if (data.msg) {
+                        console.log(response)
                         setUser(data.msg);
                     } else {
                         console.error("Unexpected API response format:", data);
@@ -68,8 +70,8 @@ export const AuthProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        setIsLoggedIn(true);
         if (token) {
+            setIsLoggedIn(true);
             userAuthentication();
         }
     }, [token]);

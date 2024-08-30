@@ -1,7 +1,7 @@
-import React, { useState, forwardRef, useImperativeHandle } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const FileUpload = forwardRef((props, ref) => {
+const FileUpload = () => {
     const [files, setFiles] = useState([]);
     const [fileUri, setFileUri] = useState([]);
     const [uploadedUrls, setUploadedUrls] = useState([]);
@@ -14,9 +14,9 @@ const FileUpload = forwardRef((props, ref) => {
     };
 
     const handleUpload = async () => {
-        const urls = [];
+        const uploadedUrls = [];
 
-        for (const file of files) {
+        for (let file of files) {
             const data = new FormData();
             data.append("file", file);
             data.append("upload_preset", process.env.REACT_APP_UPLOAD_PRESET);
@@ -24,7 +24,7 @@ const FileUpload = forwardRef((props, ref) => {
 
             try {
                 const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUD_NAME}/image/upload`, {
-                    method: "POST",
+                    method: "post",
                     body: data
                 });
 
@@ -36,7 +36,7 @@ const FileUpload = forwardRef((props, ref) => {
                 }
 
                 const imgLink = await res.json();
-                urls.push(imgLink.secure_url);
+                uploadedUrls.push(imgLink.secure_url);
             } catch (error) {
                 console.error("Error uploading image:", error);
                 toast.error("Error uploading image");
@@ -44,18 +44,9 @@ const FileUpload = forwardRef((props, ref) => {
             }
         }
 
-        setUploadedUrls(urls);
+        setUploadedUrls(uploadedUrls);
         toast.success("Files uploaded successfully");
-
-        // Notify parent component with the uploaded URLs
-        if (props.onUploadComplete) {
-            props.onUploadComplete(urls);
-        }
     };
-
-    useImperativeHandle(ref, () => ({
-        uploadFiles: handleUpload
-    }));
 
     return (
         <div className="flex flex-col items-center p-4">
@@ -65,6 +56,12 @@ const FileUpload = forwardRef((props, ref) => {
                 onChange={handleFileChange}
                 className="mb-4"
             />
+            <button
+                onClick={handleUpload}
+                className="px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
+            >
+                Upload Files
+            </button>
             {files.length > 0 && (
                 <div className="mt-4 w-full max-w-md">
                     <h2 className="text-lg font-semibold mb-2">Selected Files:</h2>
@@ -87,8 +84,8 @@ const FileUpload = forwardRef((props, ref) => {
                     <ul className="list-disc pl-5">
                         {uploadedUrls.map((url, index) => (
                             <li key={index} className="text-sm break-all">
-                                {index + 1}. {url}
-                                <img src={url} alt="Uploaded file" className="w-24 h-24 object-cover rounded mb-4 ml-4" />
+                                {index+1} {url}
+                                <img src={url} />
                             </li>
                         ))}
                     </ul>
@@ -96,6 +93,6 @@ const FileUpload = forwardRef((props, ref) => {
             )}
         </div>
     );
-});
+};
 
 export default FileUpload;

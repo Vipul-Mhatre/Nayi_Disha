@@ -23,23 +23,24 @@ const Navbar = () => {
         navigate('/dashboard');
     };
 
-    const handleMode = () => {
-        setTheme(theme === 'light' ? 'dark' : 'light');
-    };
-
     const navigationUser = [
         { title: 'Home', path: '/' },
         { title: 'Ongoing Campaigns', path: '/ongoing' },
         { title: 'Upcoming Campaigns', path: '/' },
         { title: 'Organizations', path: '/' },
+        { title: 'Donate', path: '/donate' },
+        { title: 'Donations', path: '/donations' },
+        { title: 'Track Donations', path: '/track-donations' },
     ];
-
+    
     const navigationOrg = [
         { title: 'Home', path: '/' },
         { title: 'Create Campaign', path: '/register-campaign' },
         { title: 'Edit Campaign', path: '/edit-campaign' },
         { title: 'All Campaign', path: '/all-campaign' },
+        { title: 'Complete Donations', path: '/complete-donations' },
         { title: 'Donors', path: '/donors' },
+        { title: 'Transfer Donation', path: '/complete-donation' },
     ];
 
     return (
